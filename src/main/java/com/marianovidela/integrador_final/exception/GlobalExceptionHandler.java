@@ -1,4 +1,4 @@
-package com.marianovidela.usuarios_api.exception;
+package com.marianovidela.integrador_final.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;

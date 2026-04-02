@@ -1,13 +1,14 @@
-package com.marianovidela.usuarios_api.controller;
+package com.marianovidela.integrador_final.controller;
 
-import com.marianovidela.usuarios_api.dto.UsuarioDTO;
-import com.marianovidela.usuarios_api.model.Usuario;
-import com.marianovidela.usuarios_api.service.UsuarioService;
+import com.marianovidela.integrador_final.dto.UsuarioDTO;
+import com.marianovidela.integrador_final.model.Usuario;
+import com.marianovidela.integrador_final.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/usuarios")
@@ -24,7 +25,7 @@ public class UsuarioController {
 
     // Obtener Usuarios por ID
     @GetMapping("/{id}")
-    public Usuario obtenerPorId(@PathVariable Long id) {
+    public Optional<UsuarioDTO> obtenerPorId(@PathVariable Long id) {
         return usuarioService.obtenerPorId(id);
     }
 

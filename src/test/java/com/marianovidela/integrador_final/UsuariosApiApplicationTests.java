@@ -1,4 +1,4 @@
-package com.marianovidela.usuarios_api;
+package com.marianovidela.integrador_final;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

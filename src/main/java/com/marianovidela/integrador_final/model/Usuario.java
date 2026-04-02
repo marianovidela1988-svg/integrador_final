@@ -1,4 +1,4 @@
-package com.marianovidela.usuarios_api.model;
+package com.marianovidela.integrador_final.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
@@ -20,17 +20,15 @@ public class Usuario {
 
     @NotBlank(message = "El nombre es obligatorio")
     private String nombre;
+    @NotBlank(message = "El apellido es obligatorio")
+    private String apellido;
     @Email(message = "Email inválido")
     @NotBlank(message = "El email es obligatorio")
     private String email;
-    @NotBlank(message = "La contraseña es obligatoria")
-    private String password;
-
-    private Boolean activo;
-
-
-
-    public Boolean isActivo() {
-        return activo;
-    }
+    @NotBlank(message = "El Dni es obligatorio")
+    private String dni;
+    @NotBlank(message = "La dirección es obligatoria")
+    private String direccion;
+    @NotBlank(message = "El teléfono es obligatorio")
+    private String telefono;
 }
