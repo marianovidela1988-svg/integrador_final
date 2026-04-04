@@ -11,3 +11,12 @@ public class UsuariosApiApplication {
 	}
 
 }
+
+
+			/*
+			FALTA:
+				crear metodo Agregar Categoria
+				crear clase Admin
+				crear Login de Admin
+				cambiar todos los metodos de Usuario
+			*/

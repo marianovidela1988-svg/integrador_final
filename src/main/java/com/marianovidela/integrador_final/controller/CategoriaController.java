@@ -1,5 +1,6 @@
 package com.marianovidela.integrador_final.controller;
 
+import com.marianovidela.integrador_final.dto.CategoriaDTO;
 import com.marianovidela.integrador_final.model.Categoria;
 import com.marianovidela.integrador_final.service.CategoriaService;
 import jakarta.validation.Valid;
@@ -16,28 +17,26 @@ public class CategoriaController {
 
     // Obtener todos las Categorias
     @GetMapping
-    public List<Categoria> obtenerTodos() {
+    public List<CategoriaDTO> obtenerTodos() {
         return categoriaService.obtenerTodos();
     }
 
     // Crear Categoria
     @PostMapping
-    public Categoria crear(@Valid @RequestBody Categoria categoria) {
-        return categoriaService.guardar(categoria);
+    public CategoriaDTO crear(@Valid @RequestBody CategoriaDTO categoriaDTO) {
+        return categoriaService.guardar(categoriaDTO);
     }
 
     // Actualizar Categoria
-    @PutMapping("/{id}")
-    public Categoria actualizar(@PathVariable Long id,@Valid @RequestBody Categoria categoria) {
-        // Se setea manualmente el id del usuario por Seguridad e Integridad
-        categoria.setId(id);
-        return categoriaService.guardar(categoria);
+    @PutMapping
+    public CategoriaDTO actualizar(@Valid @RequestBody CategoriaDTO categoriaDTO) {
+        return categoriaService.guardar(categoriaDTO);
     }
 
     // Eliminar Categoria
     @DeleteMapping("/{id}")
-    public void eliminar(@PathVariable Long id) {
-        categoriaService.eliminar(id);
+    public CategoriaDTO eliminar(@PathVariable Long id) {
+        return categoriaService.eliminar(id);
     }
 
 }

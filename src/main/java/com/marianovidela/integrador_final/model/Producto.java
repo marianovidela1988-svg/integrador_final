@@ -2,7 +2,10 @@ package com.marianovidela.integrador_final.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
+
+import java.util.Optional;
 
 @Entity
 @Table(name = "productos")
@@ -15,20 +18,11 @@ public class Producto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @NotBlank(message = "El nombre es obligatorio")
     private String nombre;
-
     private String descripcion;
-
-    @NotBlank(message = "El precio es obligatorio")
-    private String precio;
-
-    private String stock;
-
-    /*@NotBlank(message = "La categoría es obligatoria")
+    private Double precio;
+    private Integer stock;
     @ManyToOne
     @JoinColumn(name = "categoria_id")
-    private Categoria categoria;*/
-
+    private Categoria categoria;
 }

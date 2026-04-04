@@ -4,13 +4,14 @@ import lombok.*;
 
 @Getter
 @Setter
-@ToString
+@NoArgsConstructor
+@AllArgsConstructor
 public class UsuarioDTO {
 
     private String nombre;
     private String apellido;
     private String email;
-    private String telefono;
+    private Long telefono;
     private String direccion;
 
 }
