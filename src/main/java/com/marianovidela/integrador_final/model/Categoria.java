@@ -1,7 +1,6 @@
 package com.marianovidela.integrador_final.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.util.ArrayList;

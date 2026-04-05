@@ -1,7 +1,6 @@
 package com.marianovidela.integrador_final.controller;
 
 import com.marianovidela.integrador_final.dto.CategoriaDTO;
-import com.marianovidela.integrador_final.model.Categoria;
 import com.marianovidela.integrador_final.service.CategoriaService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,13 +23,13 @@ public class CategoriaController {
     // Crear Categoria
     @PostMapping
     public CategoriaDTO crear(@Valid @RequestBody CategoriaDTO categoriaDTO) {
-        return categoriaService.guardar(categoriaDTO);
+        return categoriaService.crear(categoriaDTO);
     }
 
     // Actualizar Categoria
     @PutMapping
     public CategoriaDTO actualizar(@Valid @RequestBody CategoriaDTO categoriaDTO) {
-        return categoriaService.guardar(categoriaDTO);
+        return categoriaService.crear(categoriaDTO);
     }
 
     // Eliminar Categoria

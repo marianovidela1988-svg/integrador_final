@@ -1,11 +1,8 @@
 package com.marianovidela.integrador_final.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
-import java.util.Optional;
 
 @Entity
 @Table(name = "productos")

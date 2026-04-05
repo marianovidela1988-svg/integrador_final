@@ -1,9 +1,7 @@
 package com.marianovidela.integrador_final.mapper;
 
 import com.marianovidela.integrador_final.dto.CategoriaDTO;
-import com.marianovidela.integrador_final.dto.ProductoDTO;
 import com.marianovidela.integrador_final.model.Categoria;
-import com.marianovidela.integrador_final.model.Producto;
 import org.springframework.stereotype.Component;
 
 @Component

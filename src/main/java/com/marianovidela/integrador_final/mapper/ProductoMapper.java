@@ -30,6 +30,4 @@ public class ProductoMapper {
         producto.setCategoria(categoria);
         return producto;
     }
-
-
 }

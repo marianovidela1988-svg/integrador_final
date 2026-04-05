@@ -1,11 +1,9 @@
 package com.marianovidela.integrador_final.service;
 
 import com.marianovidela.integrador_final.dto.CategoriaDTO;
-import com.marianovidela.integrador_final.dto.ProductoDTO;
 import com.marianovidela.integrador_final.exception.ResourceNotFoundException;
 import com.marianovidela.integrador_final.mapper.CategoriaMapper;
 import com.marianovidela.integrador_final.model.Categoria;
-import com.marianovidela.integrador_final.model.Producto;
 import com.marianovidela.integrador_final.repository.CategoriaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +21,12 @@ public class CategoriaService {
     public List<CategoriaDTO> obtenerTodos() {
         return categoriaRepository.findAll()
                 .stream().map(c -> categoriaMapper.toDTO(c)).toList();
+    }
+
+    // Crear Categoria
+    public CategoriaDTO crear(CategoriaDTO categoriaDTO){
+        Categoria categoria = categoriaRepository.save(categoriaMapper.toEntity(categoriaDTO));
+        return categoriaMapper.toDTO(categoria);
     }
 
     // Actualizar Categoria

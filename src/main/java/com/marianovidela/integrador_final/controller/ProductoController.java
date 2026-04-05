@@ -40,7 +40,7 @@ public class ProductoController {
 
     // Actualizar Producto
     @PutMapping
-    public ProductoDTO actualizar(@Valid @RequestBody ProductoDTO productoDTO) {
+    public ProductoDTO modificar(@Valid @RequestBody ProductoDTO productoDTO) {
         return productoService.modificar(productoDTO);
     }
 
