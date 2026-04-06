@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestión de Productos</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <button onclick="window.location.href='stock.html'">← Volver a Categorías</button>
+        <h2 id="categoria-titulo">Cargando categoría...</h2>
+    </header>
+
+    <main>
+        <section id="form-producto">
+            <h3>Agregar Nuevo Producto</h3>
+            <input type="text" id="prod-nombre" placeholder="Nombre">
+            <input type="text" id="prod-desc" placeholder="Descripción">
+            <input type="number" id="prod-precio" placeholder="Precio">
+            <input type="number" id="prod-stock" placeholder="Stock Inicial">
+            <button id="btn-save-prod">Guardar Producto</button>
+        </section>
+
+        <hr>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                    <th>Precio</th>
+                    <th>Stock</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="lista-productos">
+                </tbody>
+        </table>
+    </main>
+
+    <script src="productos.js"></script>
+</body>
+</html>

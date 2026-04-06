@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control de Stock - Categorías</title>
+    <link rel="stylesheet" href="style.css"> </head>
+<body>
+    <div class="stock-container">
+        
+        <header class="header-stock">
+            <h2>Gestión de Categorías</h2>
+            <button class="btn-volver" onclick="window.location.href='inicio.html'">← Volver al Inicio</button>
+        </header>
+
+        <section class="form-crear">
+            <input type="text" id="new-category-name" placeholder="Nombre de la nueva categoría (Ej: Sanitarios)">
+            <button id="btn-add-category" class="btn-principal">Crear Categoría</button>
+        </section>
+
+        <hr>
+
+        <div id="categories-container" class="grid-container">
+            <p>Cargando categorías...</p>
+        </div>
+        
+    </div>
+
+    <script src="stock.js"></script>
+</body>
+</html>

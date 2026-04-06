@@ -17,6 +17,14 @@ public class CategoriaService {
     @Autowired
     private CategoriaMapper categoriaMapper;
 
+    // Obtener una Categoria por ID
+    public CategoriaDTO obtenerPorId(Long id) {
+        Categoria categoria = categoriaRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Categoría no encontrada con ID: " + id));
+
+        return categoriaMapper.toDTO(categoria);
+    }
+
     // Obtener todos las Categorias
     public List<CategoriaDTO> obtenerTodos() {
         return categoriaRepository.findAll()
