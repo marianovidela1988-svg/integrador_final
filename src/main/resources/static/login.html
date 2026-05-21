@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ingresar — Stock Manager</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="page-login">
+
+    <div class="login-card">
+        <div class="login-brand">
+            <span class="brand-icon">📦</span>
+            <h1>Stock Manager</h1>
+            <p>Panel de Administración</p>
+        </div>
+
+        <form id="loginForm" class="login-form">
+            <div class="form-field">
+                <label for="usuario">Usuario</label>
+                <input type="text" id="usuario" placeholder="Ingresá tu usuario" required>
+            </div>
+            <div class="form-field">
+                <label for="clave">Contraseña</label>
+                <input type="password" id="clave" placeholder="Ingresá tu contraseña" required>
+            </div>
+            <button type="submit" class="btn-login">Ingresar</button>
+        </form>
+    </div>
+
+    <script src="login.js"></script>
+</body>
+</html>

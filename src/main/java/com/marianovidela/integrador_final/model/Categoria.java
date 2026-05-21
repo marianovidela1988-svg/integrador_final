@@ -1,8 +1,11 @@
 package com.marianovidela.integrador_final.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.*;
+import org.hibernate.engine.internal.Cascade;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "categorias")
@@ -15,10 +18,7 @@ public class Categoria {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @NotBlank(message = "El nombre es obligatorio")
     private String nombre;
-
-    /*@OneToMany(mappedBy = "categoria")
-    private List<Producto> productos = new ArrayList<>();*/
+    @OneToMany(mappedBy = "categoria", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Producto> productos = new ArrayList<>();
 }

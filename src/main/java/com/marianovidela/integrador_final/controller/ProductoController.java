@@ -1,17 +1,16 @@
 package com.marianovidela.integrador_final.controller;
 
 import com.marianovidela.integrador_final.dto.ProductoDTO;
-import com.marianovidela.integrador_final.model.Producto;
 import com.marianovidela.integrador_final.service.ProductoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/productos")
+@CrossOrigin(origins = "http://127.0.0.1:5500")
 public class ProductoController {
     @Autowired
     private ProductoService productoService;
@@ -24,33 +23,31 @@ public class ProductoController {
 
     // Obtener Producto por ID
     @GetMapping("/{id}")
-    public Optional<ProductoDTO> obtenerPorId(@PathVariable Long id) {
+    public ProductoDTO obtenerPorId(@PathVariable Long id) {
         return productoService.obtenerPorId(id);
     }
 
     // Obtener Producto por nombre
-    @GetMapping("/{nombre}")
-    public Optional<ProductoDTO> obtenerPorNombre(@PathVariable String nombre) {
+    @GetMapping("/nombre/{nombre}")
+    public ProductoDTO obtenerPorNombre(@PathVariable String nombre) {
         return productoService.obtenerPorNombre(nombre);
     }
 
-    // Crear Producto
-    @PostMapping
-    public Producto crear(@Valid @RequestBody Producto producto) {
-        return productoService.guardar(producto);
+   // Crear Producto
+   @PostMapping
+    public ProductoDTO crear(@Valid @RequestBody ProductoDTO productoDTO) {
+        return productoService.crear(productoDTO);
     }
 
     // Actualizar Producto
-    @PutMapping("/{id}")
-    public Producto actualizar(@PathVariable Long id,@Valid @RequestBody Producto producto) {
-        // Se setea manualmente el id del usuario por Seguridad e Integridad
-        producto.setId(id);
-        return productoService.guardar(producto);
+    @PutMapping
+    public ProductoDTO modificar(@Valid @RequestBody ProductoDTO productoDTO) {
+        return productoService.modificar(productoDTO);
     }
 
     // Eliminar Producto
     @DeleteMapping("/{id}")
-    public void eliminar(@PathVariable Long id) {
-        productoService.eliminar(id);
+    public ProductoDTO eliminar(@PathVariable Long id) {
+        return productoService.eliminar(id);
     }
 }

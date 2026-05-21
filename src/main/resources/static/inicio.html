@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio — Stock Manager</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header class="app-header">
+        <div class="header-left">
+            <div class="app-logo">📦 Stock Manager</div>
+        </div>
+        <span id="welcome-msg" class="welcome-text"></span>
+    </header>
+
+    <div class="inicio-content">
+        <h2 class="inicio-title">Panel de Control</h2>
+        <p class="inicio-subtitle">¿Qué querés gestionar hoy?</p>
+
+        <div class="menu-grid">
+            <div class="menu-card" id="btn-stock">
+                <span class="menu-card-icon">📦</span>
+                <h3>Control de Stock</h3>
+                <p>Gestioná categorías, productos y existencias.</p>
+                <span class="menu-card-arrow">→</span>
+            </div>
+
+            <div class="menu-card" id="btn-pedidos">
+                <span class="menu-card-icon">📲</span>
+                <h3>Pedidos Telegram</h3>
+                <p>Ver solicitudes entrantes en tiempo real.</p>
+                <span class="menu-card-arrow">→</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="inicio.js"></script>
+</body>
+</html>

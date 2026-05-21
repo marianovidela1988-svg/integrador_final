@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control de Stock — Stock Manager</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header class="app-header">
+        <div class="header-left">
+            <a href="inicio.html" class="btn-back">← Inicio</a>
+            <h1 class="page-title">Control de Stock</h1>
+        </div>
+    </header>
+
+    <main class="app-main">
+        <div class="panel">
+            <p class="panel-title">Nueva Categoría</p>
+            <div class="form-inline">
+                <input type="text" id="new-category-name" placeholder="Nombre de la categoría (ej: Sanitarios)">
+                <button id="btn-add-category" class="btn btn-primary">+ Crear</button>
+            </div>
+        </div>
+
+        <div id="categories-container" class="cards-grid">
+            <p style="color: var(--text-muted); font-size: 0.9rem;">Cargando categorías...</p>
+        </div>
+    </main>
+
+    <script src="stock.js"></script>
+</body>
+</html>
