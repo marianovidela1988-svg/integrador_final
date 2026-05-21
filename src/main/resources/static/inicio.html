@@ -3,26 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio — Stock Manager</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
-        <h1 id="welcome-msg">Bienvenido</h1>
+
+    <header class="app-header">
+        <div class="header-left">
+            <div class="app-logo">📦 Stock Manager</div>
+        </div>
+        <span id="welcome-msg" class="welcome-text"></span>
     </header>
 
-    <main class="container">
-        <div class="card" id="btn-stock">
-            <img src="icons/inventory.png" alt="Stock">
-            <h2>Gestión de Stock</h2>
-            <p>Categorías, productos y existencias.</p>
-        </div>
+    <div class="inicio-content">
+        <h2 class="inicio-title">Panel de Control</h2>
+        <p class="inicio-subtitle">¿Qué querés gestionar hoy?</p>
 
-        <div class="card" id="btn-pedidos">
-            <img src="icons/orders.png" alt="Pedidos">
-            <h2>Pedidos WhatsApp</h2>
-            <p>Ver solicitudes entrantes de n8n.</p>
+        <div class="menu-grid">
+            <div class="menu-card" id="btn-stock">
+                <span class="menu-card-icon">📦</span>
+                <h3>Control de Stock</h3>
+                <p>Gestioná categorías, productos y existencias.</p>
+                <span class="menu-card-arrow">→</span>
+            </div>
+
+            <div class="menu-card" id="btn-pedidos">
+                <span class="menu-card-icon">📲</span>
+                <h3>Pedidos Telegram</h3>
+                <p>Ver solicitudes entrantes en tiempo real.</p>
+                <span class="menu-card-arrow">→</span>
+            </div>
         </div>
-    </main>
+    </div>
 
     <script src="inicio.js"></script>
 </body>

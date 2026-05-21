@@ -1,13 +1,11 @@
 document.addEventListener("DOMContentLoaded", () => {
-    // Redireccion a stock
-    const btnStock = document.getElementById("btn-stock");
-    if (btnStock) {
-        btnStock.onclick = () => window.location.href = "stock.html";
-    }
+    const user = localStorage.getItem("adminUser");
+    const welcomeEl = document.getElementById("welcome-msg");
+    if (welcomeEl && user) welcomeEl.textContent = `Bienvenido, ${user}`;
 
-    // Redireccion a pedidos
+    const btnStock = document.getElementById("btn-stock");
+    if (btnStock) btnStock.onclick = () => window.location.href = "stock.html";
+
     const btnPedidos = document.getElementById("btn-pedidos");
-    if (btnPedidos) {
-        btnPedidos.onclick = () => window.location.href = "pedidos.html";
-    }
+    if (btnPedidos) btnPedidos.onclick = () => window.location.href = "pedidos.html";
 });

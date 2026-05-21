@@ -3,28 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Control de Stock - Categorías</title>
-    <link rel="stylesheet" href="style.css"> </head>
+    <title>Control de Stock — Stock Manager</title>
+    <link rel="stylesheet" href="style.css">
+</head>
 <body>
-    <div class="stock-container">
-        
-        <header class="header-stock">
-            <h2>Gestión de Categorías</h2>
-            <button class="btn-volver" onclick="window.location.href='inicio.html'">← Volver al Inicio</button>
-        </header>
 
-        <section class="form-crear">
-            <input type="text" id="new-category-name" placeholder="Nombre de la nueva categoría (Ej: Sanitarios)">
-            <button id="btn-add-category" class="btn-principal">Crear Categoría</button>
-        </section>
-
-        <hr>
-
-        <div id="categories-container" class="grid-container">
-            <p>Cargando categorías...</p>
+    <header class="app-header">
+        <div class="header-left">
+            <a href="inicio.html" class="btn-back">← Inicio</a>
+            <h1 class="page-title">Control de Stock</h1>
         </div>
-        
-    </div>
+    </header>
+
+    <main class="app-main">
+        <div class="panel">
+            <p class="panel-title">Nueva Categoría</p>
+            <div class="form-inline">
+                <input type="text" id="new-category-name" placeholder="Nombre de la categoría (ej: Sanitarios)">
+                <button id="btn-add-category" class="btn btn-primary">+ Crear</button>
+            </div>
+        </div>
+
+        <div id="categories-container" class="cards-grid">
+            <p style="color: var(--text-muted); font-size: 0.9rem;">Cargando categorías...</p>
+        </div>
+    </main>
 
     <script src="stock.js"></script>
 </body>
