@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pedidos Telegram — Stock Manager</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header class="app-header">
+        <div class="header-left">
+            <a href="inicio.html" class="btn-back">← Inicio</a>
+            <div>
+                <h1 class="page-title">
+                    Pedidos Telegram
+                    <span id="badge-pendientes" class="badge" style="display:none">0</span>
+                </h1>
+                <p class="header-subtitle">Los pedidos llegan automáticamente cuando un cliente confirma su compra.</p>
+            </div>
+        </div>
+    </header>
+
+    <main class="app-main">
+
+        <div class="tabs-container">
+            <button class="tab-btn active" id="tab-pendientes" onclick="mostrarTab('pendientes')">Pendientes</button>
+            <button class="tab-btn" id="tab-historial" onclick="mostrarTab('historial')">Historial</button>
+        </div>
+
+        <div id="contenido-pedidos">
+            <p class="msg-espera">Conectando con el servidor...</p>
+        </div>
+
+    </main>
+
+    <script src="pedidos.js"></script>
+</body>
+</html>
