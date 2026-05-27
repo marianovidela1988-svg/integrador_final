@@ -6,13 +6,13 @@
         "url": "http://localhost:8080/categorias",
         "options": {}
       },
-      "id": "b97b7586-df49-4e26-9265-6a2e2a6f1507",
+      "id": "52eac52a-2047-46a6-a871-8e3290c7e31d",
       "name": "Get Categorias1",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        -400,
-        32
+        432,
+        272
       ]
     },
     {
@@ -25,13 +25,13 @@
         "body": "={{ JSON.stringify({ chat_id: $('Telegram Trigger').first().json.callback_query.message.chat.id, text: '🎉 *¡Pedido enviado!*\\n\\n' + ($json.total != null ? 'Total: *$' + $json.total + '*\\n\\n' : '') + 'El local ya recibió tu pedido. ¡Gracias! 😊', parse_mode: 'Markdown' }) }}",
         "options": {}
       },
-      "id": "7c46163e-59d6-45fe-88b5-1ba3e28edde8",
+      "id": "a9f3b652-d3af-456a-b391-ee96a24bd3af",
       "name": "Pedido Enviado",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        768,
-        480
+        1440,
+        528
       ]
     },
     {
@@ -44,13 +44,13 @@
         "body": "={{ JSON.stringify({ clienteNombre: ($('Telegram Trigger').first().json.callback_query.from.first_name || '') + ' ' + ($('Telegram Trigger').first().json.callback_query.from.last_name || '') }) }}",
         "options": {}
       },
-      "id": "c7c42d97-d541-4d66-9865-bbad0ba0504d",
+      "id": "0b587c1a-8249-4547-9769-b1721ed90635",
       "name": "Confirmar Pedido",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        528,
-        480
+        1200,
+        528
       ]
     },
     {
@@ -63,26 +63,26 @@
         "body": "={{ JSON.stringify({ chat_id: $json.chatId, text: $json.text, parse_mode: 'Markdown', reply_markup: { inline_keyboard: $json.rows } }) }}",
         "options": {}
       },
-      "id": "d91362c9-f2ae-45f9-bb20-1887f3fbf7a6",
+      "id": "006f1bb6-e588-4ea9-b15b-fa832133df60",
       "name": "Enviar Cat Menu",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        1008,
-        272
+        1680,
+        320
       ]
     },
     {
       "parameters": {
         "jsCode": "// El nodo HTTP devuelve el array completo como UN solo item en $input\nconst raw = $input.first().json;\nconst categorias = Array.isArray(raw) ? raw : $input.all().map(i => i.json);\nconst chatId = $('Telegram Trigger').first().json.callback_query.message.chat.id;\n\nif (!categorias || categorias.length === 0) {\n  return [{ json: { chatId, text: '⚠️ No hay categorías disponibles.', rows: [[{ text: '✅ Finalizar pedido', callback_data: 'fin' }]] } }];\n}\n\nconst rows = categorias.map(cat => ([{ text: `📂 ${cat.nombre}`, callback_data: `cat_${cat.id}` }]));\nrows.push([{ text: '✅ Finalizar pedido', callback_data: 'fin' }]);\n\nreturn [{ json: { chatId, text: '📋 *Categorías disponibles:*', rows } }];"
       },
-      "id": "f05d13e3-c89f-4c12-90df-3d89fe7263a4",
+      "id": "d85ef79b-5f2d-44eb-b3a6-a7e1310ae3c6",
       "name": "Build Cat Menu 2",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        768,
-        272
+        1440,
+        320
       ]
     },
     {
@@ -90,15 +90,14 @@
         "url": "http://localhost:8080/categorias",
         "options": {}
       },
-      "id": "56586bb6-336c-43e9-b3d8-e5c319dc57ca",
+      "id": "1a7ef917-e066-4c46-b28b-1e1ffec76b70",
       "name": "Get Cat Menu",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        528,
-        272
-      ],
-      "disabled": true
+        1200,
+        320
+      ]
     },
     {
       "parameters": {
@@ -110,13 +109,13 @@
         "body": "={{ JSON.stringify({\n  chat_id: $('Telegram Trigger').first().json.callback_query.message.chat.id,\n  text: '✅ *Producto agregado al carrito* 🛒\\n\\n' +\n        ($json.items != null ? 'Tenés *' + $json.items + '* ítem(s) en el carrito.\\n\\n' : '') +\n        '¿Qué querés hacer?',\n  parse_mode: 'Markdown',\n  reply_markup: {\n    inline_keyboard: [\n      [{ text: '📂 Seguir comprando', callback_data: 'menu' }],\n      [{ text: '✅ Confirmar y enviar pedido', callback_data: 'fin' }]\n    ]\n  }\n}) }}",
         "options": {}
       },
-      "id": "769a73b8-39b9-42c7-bbcf-5f1621d71dbd",
+      "id": "c3382134-c49f-4956-8e5d-9ebd74821740",
       "name": "Item Agregado",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        1008,
-        80
+        1680,
+        128
       ]
     },
     {
@@ -129,26 +128,26 @@
         "body": "={{ JSON.stringify({ productoId: $json.productoId, cantidad: $json.cantidad }) }}",
         "options": {}
       },
-      "id": "4a2f2f9a-ea04-4622-ab1e-4d74f44b9e46",
+      "id": "a9c5f21e-5737-4133-bb36-81e1df5defc2",
       "name": "Agregar al Carrito",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        768,
-        80
+        1440,
+        128
       ]
     },
     {
       "parameters": {
         "jsCode": "const trigger = $('Telegram Trigger').first().json;\nconst parts = trigger.callback_query.data.split('_');\n// formato: qty_{productoId}_{cantidad}\nreturn [{ json: {\n  chatId: trigger.callback_query.message.chat.id,\n  productoId: parseInt(parts[1]),\n  cantidad: parseInt(parts[2])\n} }];"
       },
-      "id": "770dd2c6-c3c5-4dc2-97fc-2d1202d6d926",
+      "id": "0d484010-6bd3-4d7d-8bfe-c899d8f9e085",
       "name": "Parsear Qty",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        528,
-        80
+        1200,
+        128
       ]
     },
     {
@@ -161,26 +160,26 @@
         "body": "={{ JSON.stringify({ chat_id: $json.chatId, text: $json.text, reply_markup: { inline_keyboard: $json.rows } }) }}",
         "options": {}
       },
-      "id": "c2b7765e-f849-4d95-b7d2-c63b0df7e893",
+      "id": "636915c7-2f69-41ca-b821-2da719070d45",
       "name": "Enviar Qty",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        768,
-        -144
+        1440,
+        -96
       ]
     },
     {
       "parameters": {
         "jsCode": "const trigger = $('Telegram Trigger').first().json;\nconst prodId = trigger.callback_query.data.replace('prod_', '');\nconst chatId = trigger.callback_query.message.chat.id;\n\nconst rows = [\n  [1,2,3,4,5].map(n => ({ text: `${n}`, callback_data: `qty_${prodId}_${n}` })),\n  [6,7,8,9,10].map(n => ({ text: `${n}`, callback_data: `qty_${prodId}_${n}` })),\n  [\n    { text: '🔙 Volver al menú', callback_data: 'menu' },\n    { text: '✅ Finalizar pedido', callback_data: 'fin' }\n  ]\n];\n\nreturn [{ json: { chatId, text: '🔢 ¿Cuántas unidades querés agregar?', rows } }];"
       },
-      "id": "4907ec6c-7814-4686-96fd-4f54613602a9",
+      "id": "cc43e217-51dc-4a2e-83ab-f73c8359b28d",
       "name": "Build Qty Menu",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        528,
-        -144
+        1200,
+        -96
       ]
     },
     {
@@ -193,26 +192,26 @@
         "body": "={{ JSON.stringify({ chat_id: $json.chatId, text: $json.text, parse_mode: 'Markdown', reply_markup: { inline_keyboard: $json.rows } }) }}",
         "options": {}
       },
-      "id": "f1a831c6-9a87-41f4-869a-5d8b258f6725",
+      "id": "32a7679e-2974-4866-ab2c-7582746724f2",
       "name": "Enviar Productos",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        1008,
-        -368
+        1680,
+        -320
       ]
     },
     {
       "parameters": {
         "jsCode": "const cat = $input.first().json;\nconst chatId = $('Telegram Trigger').first().json.callback_query.message.chat.id;\n\n// Soporte para respuesta plana (array) o con campo 'productos'\nconst productos = Array.isArray(cat.productos)\n  ? cat.productos\n  : Array.isArray(cat)\n    ? cat\n    : [];\n\nif (productos.length === 0) {\n  return [{ json: {\n    chatId,\n    text: '⚠️ Esta categoría no tiene productos disponibles.',\n    rows: [[{ text: '🔙 Volver al menú', callback_data: 'menu' }]]\n  }}];\n}\n\nconst rows = productos.map(p => ([\n  { text: `🛍️ ${p.nombre}  💲${p.precio}`, callback_data: `prod_${p.id}` }\n]));\n\n// Botones de navegación en la misma fila al final\nrows.push([\n  { text: '🔙 Volver al menú', callback_data: 'menu' },\n  { text: '✅ Finalizar pedido', callback_data: 'fin' }\n]);\n\nreturn [{ json: { chatId, text: `📦 *${cat.nombre || 'Productos'}*\\nElegí un producto:`, rows } }];"
       },
-      "id": "d0ece567-4baf-479d-b3ce-942fd7880fa4",
+      "id": "fcd2a22e-6043-408a-93fc-4b6a3335dfb3",
       "name": "Build Prod Menu",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        768,
-        -368
+        1440,
+        -320
       ]
     },
     {
@@ -220,13 +219,13 @@
         "url": "=http://localhost:8080/categorias/{{ $('Telegram Trigger').first().json.callback_query.data.replace('cat_', '') }}",
         "options": {}
       },
-      "id": "d1010bb9-6f55-4549-bfac-578beff45bbe",
+      "id": "feb2cc11-01dd-4e48-80ea-1f677c6e42e3",
       "name": "Get Productos",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        528,
-        -368
+        1200,
+        -320
       ]
     },
     {
@@ -359,13 +358,13 @@
           "fallbackOutput": "none"
         }
       },
-      "id": "73da7f47-d839-44b0-b435-6daf7c5a9c30",
+      "id": "d950f273-5397-417a-bd88-df0e4b7f6aa2",
       "name": "Tipo Callback",
       "type": "n8n-nodes-base.switch",
       "typeVersion": 3.2,
       "position": [
-        288,
-        -144
+        672,
+        -96
       ]
     },
     {
@@ -378,26 +377,26 @@
         "body": "={{ JSON.stringify({ chat_id: $json.chatId, text: $json.text, reply_markup: { inline_keyboard: $json.rows } }) }}",
         "options": {}
       },
-      "id": "37e8c0ff-8218-429f-9fe1-42eb83c522d5",
+      "id": "d151c794-eb1e-4198-bf1f-c7d25f1ae617",
       "name": "Enviar Categorias",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        32,
-        32
+        912,
+        272
       ]
     },
     {
       "parameters": {
         "jsCode": "// El nodo HTTP devuelve el array completo como UN solo item en $input\nconst raw = $input.first().json;\nconst categorias = Array.isArray(raw) ? raw : $input.all().map(i => i.json);\n\nconst trigger = $('Telegram Trigger').first().json;\nconst chatId = trigger.message?.chat?.id || trigger.callback_query?.message?.chat?.id;\nconst nombre = trigger.message?.from?.first_name || trigger.callback_query?.from?.first_name || 'Cliente';\n\nif (!categorias || categorias.length === 0) {\n  return [{ json: { chatId, text: '⚠️ No hay categorías disponibles por el momento.', rows: [] } }];\n}\n\nconst rows = categorias.map(cat => ([{ text: `📂 ${cat.nombre}`, callback_data: `cat_${cat.id}` }]));\n\nreturn [{ json: { chatId, text: `¡Hola ${nombre}! 👋\\nElegí una categoría para ver los productos:`, rows } }];"
       },
-      "id": "73d1ecb0-d073-488b-8282-41649d6378f1",
+      "id": "9a7c3de8-ac26-4e05-b2d8-6be94f806f41",
       "name": "Build Cat Menu",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -192,
-        32
+        672,
+        272
       ]
     },
     {
@@ -414,13 +413,13 @@
         },
         "options": {}
       },
-      "id": "6afa4d74-a9f9-40d4-8b31-836d195facec",
+      "id": "2def52aa-973b-4888-80a4-bf623e1285bd",
       "name": "Bot Config",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.3,
       "position": [
-        -640,
-        32
+        32,
+        80
       ]
     },
     {
@@ -431,85 +430,125 @@
         ],
         "additionalFields": {}
       },
-      "id": "58d47fe3-b409-4061-8bd6-9b18dc251018",
+      "id": "2c4eb9f3-ce43-47d1-b5f9-850578920658",
       "name": "Telegram Trigger",
       "type": "n8n-nodes-base.telegramTrigger",
       "typeVersion": 1.2,
       "position": [
-        -864,
-        32
+        -192,
+        80
       ],
       "webhookId": "7b073647-8ca2-497e-af0a-9f7065e870f2",
+      "retryOnFail": false,
+      "executeOnce": false,
       "credentials": {
         "telegramApi": {
           "id": "kdogkhHVM7Djkk2Q",
           "name": "Telegram account"
         }
       }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "if-cond-cb",
+              "leftValue": "={{ $('Telegram Trigger').first().json.callback_query }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "980a6282-a0f2-4435-9c15-010e21137f0a",
+      "name": "Es Callback?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        192,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.telegram.org/bot{{ $('Bot Config').first().json.botToken }}/answerCallbackQuery",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ JSON.stringify({ callback_query_id: $('Telegram Trigger').first().json.callback_query.id }) }}",
+        "options": {}
+      },
+      "id": "264c8a94-99b3-4af4-a4cd-54a4bd56028f",
+      "name": "Answer Callback",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        432,
+        -96
+      ],
+      "onError": "continueRegularOutput"
     }
   ],
   "pinData": {},
   "connections": {
-    "Confirmar Pedido": {
+    "Telegram Trigger": {
       "main": [
         [
           {
-            "node": "Pedido Enviado",
+            "node": "Bot Config",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Build Cat Menu 2": {
+    "Bot Config": {
       "main": [
         [
           {
-            "node": "Enviar Cat Menu",
+            "node": "Es Callback?",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Get Cat Menu": {
+    "Es Callback?": {
       "main": [
         [
           {
-            "node": "Build Cat Menu 2",
+            "node": "Answer Callback",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get Categorias1",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Agregar al Carrito": {
+    "Answer Callback": {
       "main": [
         [
           {
-            "node": "Item Agregado",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Parsear Qty": {
-      "main": [
-        [
-          {
-            "node": "Agregar al Carrito",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Build Qty Menu": {
-      "main": [
-        [
-          {
-            "node": "Enviar Qty",
+            "node": "Tipo Callback",
             "type": "main",
             "index": 0
           }
@@ -527,22 +566,11 @@
         ]
       ]
     },
-    "Build Prod Menu": {
+    "Build Cat Menu": {
       "main": [
         [
           {
-            "node": "Enviar Productos",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Get Productos": {
-      "main": [
-        [
-          {
-            "node": "Build Prod Menu",
+            "node": "Enviar Categorias",
             "type": "main",
             "index": 0
           }
@@ -588,44 +616,88 @@
         ]
       ]
     },
-    "Enviar Categorias": {
+    "Get Productos": {
       "main": [
         [
           {
-            "node": "Tipo Callback",
+            "node": "Build Prod Menu",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Build Cat Menu": {
+    "Build Prod Menu": {
       "main": [
         [
           {
-            "node": "Enviar Categorias",
+            "node": "Enviar Productos",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Bot Config": {
+    "Build Qty Menu": {
       "main": [
         [
           {
-            "node": "Get Categorias1",
+            "node": "Enviar Qty",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Telegram Trigger": {
+    "Parsear Qty": {
       "main": [
         [
           {
-            "node": "Bot Config",
+            "node": "Agregar al Carrito",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agregar al Carrito": {
+      "main": [
+        [
+          {
+            "node": "Item Agregado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Cat Menu": {
+      "main": [
+        [
+          {
+            "node": "Build Cat Menu 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Cat Menu 2": {
+      "main": [
+        [
+          {
+            "node": "Enviar Cat Menu",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Confirmar Pedido": {
+      "main": [
+        [
+          {
+            "node": "Pedido Enviado",
             "type": "main",
             "index": 0
           }
@@ -633,12 +705,12 @@
       ]
     }
   },
-  "active": false,
+  "active": true,
   "settings": {
     "executionOrder": "v1",
     "availableInMCP": false
   },
-  "versionId": "92612f0d-020e-4d58-9d32-cd30f8177deb",
+  "versionId": "c41baaa7-608c-4be9-b7cc-1c484b6bae8e",
   "meta": {
     "instanceId": "6ac182fd9297fa03c4610cbf69f6f050d6097918010667971fffdb91166c4158"
   },
