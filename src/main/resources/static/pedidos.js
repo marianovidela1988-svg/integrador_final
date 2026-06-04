@@ -83,7 +83,10 @@ function renderPedidos(pedidos) {
 function crearCard(pedido) {
     const card = document.createElement("div");
     const esPendiente = pedido.estado === "PENDIENTE";
-    card.className = `pedido-card ${esPendiente ? "pedido-pendiente" : "pedido-atendido"}`;
+    const estadoClass = esPendiente ? "pedido-pendiente"
+        : pedido.estado === "CONFIRMADO" ? "pedido-confirmado"
+        : "pedido-cancelado";
+    card.className = `pedido-card ${estadoClass}`;
 
     const fechaFormateada = pedido.fechaHora
         ? new Date(pedido.fechaHora).toLocaleString("es-AR")
@@ -101,7 +104,7 @@ function crearCard(pedido) {
     card.innerHTML = `
         <div class="pedido-header">
             <div>
-                <span class="pedido-estado ${esPendiente ? 'estado-pendiente' : 'estado-atendido'}">${pedido.estado}</span>
+                <span class="pedido-estado ${esPendiente ? 'estado-pendiente' : pedido.estado === 'CONFIRMADO' ? 'estado-confirmado' : 'estado-cancelado'}">${pedido.estado}</span>
                 <strong class="pedido-cliente"> ${pedido.clienteNombre}</strong>
                 <span class="pedido-chatid">Chat ID: ${pedido.chatId}</span>
             </div>
@@ -123,17 +126,18 @@ function crearCard(pedido) {
         <div class="pedido-footer">
             <strong class="pedido-total">TOTAL: $${pedido.total.toFixed(2)}</strong>
             ${esPendiente
-                ? `<button class="btn-atender" onclick="atenderPedido(${pedido.id})">Marcar como Atendido</button>`
-                : `<span class="texto-atendido">Pedido atendido</span>`}
+                ? `<button class="btn-confirmar" onclick="atenderPedido(${pedido.id}, 'CONFIRMADO')">Confirmar</button>`
+                +  `<button class="btn-cancelar" onclick="atenderPedido(${pedido.id}, 'CANCELADO')">Cancelar</button>`
+                : `<span class="${pedido.estado === 'CONFIRMADO' ? 'texto-confirmado' : 'texto-cancelado'}">Pedido ${pedido.estado}</span>`}
         </div>
     `;
 
     return card;
 }
 
-async function atenderPedido(id) {
+async function atenderPedido(id, estado) {
     try {
-        await fetch(`${API_PEDIDOS}/${id}/atender`, { method: 'PUT' });
+        await fetch(`${API_PEDIDOS}/${id}/estado?estado=${estado}`, { method: 'PUT' });
         pedidosConocidos.delete(id);
         cargarPedidos();
     } catch (error) {

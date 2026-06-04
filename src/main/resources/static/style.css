@@ -286,8 +286,20 @@ input::placeholder { color: var(--text-light); }
     border-color: var(--red);
 }
 
-.btn-atender {
+.btn-confirmar {
     background: var(--green);
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: var(--radius-sm);
+    font-size: 0.86rem;
+    font-family: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+}
+.btn-cancelar {
+    background: var(--red);
     color: white;
     border: none;
     padding: 8px 20px;
@@ -669,6 +681,14 @@ tbody tr:hover td { background: #f8fafc; }
     background: #fffdf8;
 }
 
+.pedido-confirmado {
+    border-left-color: var(--green);
+}
+
+.pedido-cancelado {
+    border-left-color: var(--red);
+}
+
 .pedido-atendido {
     border-left-color: var(--green);
     opacity: 0.78;
@@ -692,8 +712,10 @@ tbody tr:hover td { background: #f8fafc; }
     margin-right: 8px;
 }
 
-.estado-pendiente { background: #fef3c7; color: #92400e; }
-.estado-atendido  { background: #d1fae5; color: #065f46; }
+.estado-pendiente  { background: #fef3c7; color: #92400e; }
+.estado-confirmado { background: #d1fae5; color: #065f46; }
+.estado-cancelado  { background: #fee2e2; color: #991b1b; }
+.estado-atendido   { background: #d1fae5; color: var(--green); }
 
 .pedido-cliente {
     font-size: 1rem;
@@ -763,8 +785,15 @@ tbody tr:hover td { background: #f8fafc; }
     color: var(--text);
 }
 
-.texto-atendido {
+.texto-atendido,
+.texto-confirmado {
     color: var(--green);
+    font-size: 0.86rem;
+    font-weight: 600;
+}
+
+.texto-cancelado {
+    color: var(--red);
     font-size: 0.86rem;
     font-weight: 600;
 }

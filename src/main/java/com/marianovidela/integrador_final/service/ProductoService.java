@@ -68,6 +68,7 @@ public class ProductoService {
         return productoMapper.toDTO(actualizado);
     }
 
+
     // Eliminar Producto
     public ProductoDTO eliminar(Long id) {
         Producto producto = productoRepository.findById(id)

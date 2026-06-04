@@ -3,10 +3,13 @@ package com.marianovidela.integrador_final.controller;
 import com.marianovidela.integrador_final.dto.PedidoWebhookDTO;
 import com.marianovidela.integrador_final.model.Pedido;
 import com.marianovidela.integrador_final.service.PedidoService;
+import com.marianovidela.integrador_final.service.ProductoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,6 +20,10 @@ public class PedidoController {
 
     @Autowired
     private PedidoService pedidoService;
+
+
+    @Autowired
+    private RestTemplate restTemplate;
 
     // N8N llama a este endpoint cuando el cliente confirma su pedido en Telegram
     @PostMapping("/webhook")
@@ -41,9 +48,25 @@ public class PedidoController {
         return pedidoService.obtenerTodos();
     }
 
-    // Admin marca el pedido como atendido
-    @PutMapping("/{id}/atender")
-    public Pedido atender(@PathVariable Long id) {
-        return pedidoService.atender(id);
+    // Admin marca el pedido como CONFIRMADO o CANCELADO
+    @PutMapping("/{id}/estado")
+    public Pedido cambiarEstado(@PathVariable Long id, @RequestParam String estado) {
+        Pedido pedido = pedidoService.cambiarEstado(id, estado);
+
+        // Avisar a n8n para que notifique al cliente por Telegram
+        try {
+            Map<String, Object> payload = new HashMap<>();
+            payload.put("chatId", pedido.getChatId());
+            payload.put("estado", pedido.getEstado());
+            payload.put("total",  pedido.getTotal());
+
+            restTemplate.postForEntity(
+                    "http://localhost:5678/webhook/estado-pedido", payload, String.class);
+        } catch (Exception e) {
+            // el estado ya quedó guardado; si la notificación falla, no rompemos la operación
+            System.err.println("No se pudo notificar a n8n para el pedido " + id + ": " + e.getMessage());
+        }
+
+        return pedido;
     }
 }
