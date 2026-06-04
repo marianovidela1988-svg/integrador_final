@@ -1,9 +1,12 @@
 package com.marianovidela.integrador_final.service;
 
 import com.marianovidela.integrador_final.dto.PedidoWebhookDTO;
+import com.marianovidela.integrador_final.dto.ProductoDTO;
 import com.marianovidela.integrador_final.exception.ResourceNotFoundException;
+import com.marianovidela.integrador_final.mapper.ProductoMapper;
 import com.marianovidela.integrador_final.model.ItemPedido;
 import com.marianovidela.integrador_final.model.Pedido;
+import com.marianovidela.integrador_final.model.Producto;
 import com.marianovidela.integrador_final.repository.PedidoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,10 +49,10 @@ public class PedidoService {
         return pedidoRepository.findAllByOrderByFechaHoraDesc();
     }
 
-    public Pedido atender(Long id) {
+    public Pedido cambiarEstado(Long id, String estado) {
         Pedido pedido = pedidoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Pedido no encontrado con ID: " + id));
-        pedido.setEstado("ATENDIDO");
+        pedido.setEstado(estado);
         return pedidoRepository.save(pedido);
     }
 }
