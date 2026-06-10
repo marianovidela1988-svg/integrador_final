@@ -29,6 +29,7 @@ public class PedidoController {
     @PostMapping("/webhook")
     public ResponseEntity<Map<String, Object>> recibirPedido(@RequestBody PedidoWebhookDTO dto) {
         Pedido pedido = pedidoService.recibirPedido(dto);
+
         return ResponseEntity.ok(Map.of(
                 "id", pedido.getId(),
                 "estado", pedido.getEstado(),

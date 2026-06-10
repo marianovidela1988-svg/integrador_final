@@ -52,7 +52,9 @@ public class CarritoController {
         return ResponseEntity.ok(Map.of(
                 "id", pedido.getId(),
                 "total", pedido.getTotal(),
+                "estado", pedido.getEstado(),
                 "mensaje", "Pedido confirmado exitosamente"
         ));
+
     }
 }

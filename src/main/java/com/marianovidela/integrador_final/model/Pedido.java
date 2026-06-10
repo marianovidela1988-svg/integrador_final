@@ -33,6 +33,12 @@ public class Pedido {
     @PrePersist
     public void prePersist() {
         fechaHora = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
-        estado = "PENDIENTE";
+        /*
+         Si el estado no fue asignado "CANCELADO" por falta de stock,
+         entonces se lo asigna como "PENDIENTE".
+        */
+        if (estado == null) {
+            estado = "PENDIENTE";
+        }
     }
 }
