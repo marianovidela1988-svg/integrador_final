@@ -1,6 +1,7 @@
 package com.marianovidela.integrador_final.exception;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,6 +24,7 @@ public class GlobalExceptionHandler {
         return errores;
     }
 
+
     @ExceptionHandler(ResourceNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public Map<String, String> manejarNotFound(ResourceNotFoundException ex) {
@@ -32,4 +34,16 @@ public class GlobalExceptionHandler {
 
         return error;
     }
+
+    // Handler global para devolver 409 Conflict con JSON limpio (Stock insuficiente)
+    @ExceptionHandler(StockInsuficienteException.class)
+    public ResponseEntity<Map<String, Object>> handleStock(StockInsuficienteException ex) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("error", "STOCK_INSUFICIENTE");
+        body.put("mensaje", ex.getMessage());
+        body.put("producto", ex.getProducto());
+        body.put("stockDisponible", ex.getStockDisponible());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(body);
+    }
+
 }

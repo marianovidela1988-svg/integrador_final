@@ -1,0 +1,1125 @@
+{
+  "name": "ProyectoFinal",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "estado-pedido",
+        "options": {}
+      },
+      "id": "e1269806-e367-49d4-8176-ac4707baa8d1",
+      "name": "Webhook Estado",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -2000,
+        -6192
+      ],
+      "webhookId": "estado-pedido-webhook"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "sw-conf",
+                    "leftValue": "={{ $json.body.estado }}",
+                    "rightValue": "CONFIRMADO",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Confirmado"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "sw-canc",
+                    "leftValue": "={{ $json.body.estado }}",
+                    "rightValue": "CANCELADO",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Cancelado"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "none"
+        }
+      },
+      "id": "d46aa04b-8172-473c-889d-d1555b1787fc",
+      "name": "Estado Pedido",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -1760,
+        -6192
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.body.chatId }}",
+        "text": "={{ '✅ *¡Pedido confirmado!*\\n\\n' + ($json.body.total != null ? 'Total: *$' + $json.body.total + '*\\n\\n' : '') + 'Se confirmó tu pedido. ¡Gracias! 😊' }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "Markdown"
+        }
+      },
+      "id": "c7c8b07e-e497-4d22-b35a-320d1c74fb89",
+      "name": "Telegram Confirmado",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -1520,
+        -6304
+      ],
+      "webhookId": "dd59a6e2-cacf-47b7-a4e1-78debbeedffb",
+      "credentials": {
+        "telegramApi": {
+          "id": "F3eWeXAqY7iOSt6K",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.body.chatId }}",
+        "text": "={{ '❌ *Pedido cancelado*\\n\\n' + ($json.body.motivo ? $json.body.motivo + '\\n\\n' : '') + 'Lamentablemente tu pedido fue cancelado.' }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "Markdown"
+        }
+      },
+      "id": "0c6d2193-ee58-4f1d-9721-d84ee59859d2",
+      "name": "Telegram Cancelado",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -1520,
+        -6080
+      ],
+      "webhookId": "9de5c113-2898-48c9-8418-85d581d5dee8",
+      "credentials": {
+        "telegramApi": {
+          "id": "F3eWeXAqY7iOSt6K",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "if-status-ok",
+              "leftValue": "={{ $json.statusCode }}",
+              "rightValue": 200,
+              "operator": {
+                "type": "number",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "298cb62c-1dc4-47a4-a73b-943b4d0f4487",
+      "name": "¿Pedido OK?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        -384,
+        -6496
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.telegram.org/bot{{ $('Bot Config1').first().json.botToken }}/sendMessage",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ JSON.stringify({ chat_id: $('Telegram Trigger1').first().json.callback_query.message.chat.id, text: '⚠️ *No se pudo confirmar el pedido*\\n\\n' + ($json.body && $json.body.mensaje ? $json.body.mensaje : 'No hay stock suficiente para uno de los productos.'), parse_mode: 'Markdown', reply_markup: { inline_keyboard: [ [{ text: '🏠 Volver al menú principal', callback_data: 'menu' }], [{ text: '✅ Finalizar', callback_data: 'cancelar' }] ] }  }) }}",
+        "options": {}
+      },
+      "id": "7cb38e0e-b99e-4a58-b9da-8c6de4cd4b6c",
+      "name": "Sin Stock",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        368,
+        -6480
+      ]
+    },
+    {
+      "parameters": {
+        "url": "http://host.docker.internal:8080/categorias",
+        "options": {}
+      },
+      "id": "f19a93d8-eb3b-4093-9bd6-1d0e9ece628d",
+      "name": "Get Categorias",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -1456,
+        -6784
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.telegram.org/bot{{ $('Bot Config1').first().json.botToken }}/sendMessage",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ JSON.stringify({ chat_id: $('Telegram Trigger1').first().json.callback_query.message.chat.id, text: '🎉 *¡Pedido enviado!*\\n\\n' + ($json.body.total != null ? 'Total: *$' + $json.body.total + '*\\n\\n' : '') + 'El local ya recibió tu pedido. ¡Gracias! 😊', parse_mode: 'Markdown' }) }}",
+        "options": {}
+      },
+      "id": "229037b6-fe56-4365-95fc-4f0f27309fb2",
+      "name": "Pedido Enviado1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        128,
+        -6256
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=http://host.docker.internal:8080/carrito/{{ $('Telegram Trigger1').first().json.callback_query.message.chat.id }}/confirmar",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ JSON.stringify({ clienteNombre: ($('Telegram Trigger1').first().json.callback_query.from.first_name || '') + ' ' + ($('Telegram Trigger1').first().json.callback_query.from.last_name || '') }) }}",
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "3beda585-11c1-4b08-a6f6-de254adea156",
+      "name": "Confirmar Pedido1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -624,
+        -6496
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.telegram.org/bot{{ $('Bot Config1').first().json.botToken }}/sendMessage",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ JSON.stringify({ chat_id: $json.chatId, text: $json.text, parse_mode: 'Markdown', reply_markup: { inline_keyboard: $json.rows } }) }}",
+        "options": {}
+      },
+      "id": "d3438993-58ad-4e6c-9648-50be3825fe27",
+      "name": "Enviar Cat Menu1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -144,
+        -6736
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// El nodo HTTP devuelve el array completo como UN solo item en $input\nconst raw = $input.first().json;\nconst categorias = Array.isArray(raw) ? raw : $input.all().map(i => i.json);\nconst chatId = $('Telegram Trigger1').first().json.callback_query.message.chat.id;\n\nif (!categorias || categorias.length === 0) {\n  return [{ json: { chatId, text: '⚠️ No hay categorías disponibles.', rows: [[{ text: '✅ Finalizar pedido', callback_data: 'fin' }]] } }];\n}\n\nconst rows = categorias.map(cat => ([{ text: `📂 ${cat.nombre}`, callback_data: `cat_${cat.id}` }]));\nrows.push([{ text: '✅ Finalizar pedido', callback_data: 'fin' }]);\n\nreturn [{ json: { chatId, text: '📋 *Categorías disponibles:*', rows } }];"
+      },
+      "id": "218b7712-4846-45b4-b701-e166ea055c3e",
+      "name": "Build Cat Menu ",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -384,
+        -6736
+      ]
+    },
+    {
+      "parameters": {
+        "url": "http://host.docker.internal:8080/categorias",
+        "options": {}
+      },
+      "id": "c003833d-c816-4eee-81ac-80807d11beb0",
+      "name": "Get Cat Menu1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -624,
+        -6736
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.telegram.org/bot{{ $('Bot Config1').first().json.botToken }}/sendMessage",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ JSON.stringify({\n  chat_id: $('Telegram Trigger1').first().json.callback_query.message.chat.id,\n  text: '✅ *Producto agregado al carrito* 🛒\\n\\n' +\n        ($json.items != null ? 'Tenés *' + $json.items + '* ítem(s) en el carrito.\\n\\n' : '') +\n        '¿Qué querés hacer?',\n  parse_mode: 'Markdown',\n  reply_markup: {\n    inline_keyboard: [\n      [{ text: '📂 Seguir comprando', callback_data: 'menu' }],\n      [{ text: '✅ Confirmar y enviar pedido', callback_data: 'fin' }]\n    ]\n  }\n}) }}",
+        "options": {}
+      },
+      "id": "c25375bf-9c24-4a79-9d66-ab4c16b160a2",
+      "name": "Item Agregado1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -144,
+        -6928
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=http://host.docker.internal:8080/carrito/{{ $json.chatId }}/item",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ JSON.stringify({ productoId: $json.productoId, cantidad: $json.cantidad }) }}",
+        "options": {}
+      },
+      "id": "981be85f-1a52-4e5d-8a3c-c80031cc8800",
+      "name": "Agregar al Carrito1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -384,
+        -6928
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const trigger = $('Telegram Trigger1').first().json;\nconst parts = trigger.callback_query.data.split('_');\n// formato: qty_{productoId}_{cantidad}\nreturn [{ json: {\n  chatId: trigger.callback_query.message.chat.id,\n  productoId: parseInt(parts[1]),\n  cantidad: parseInt(parts[2])\n} }];"
+      },
+      "id": "37d285da-7d8a-4072-b4ae-231a7febcbef",
+      "name": "Parsear Qty1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -624,
+        -6928
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.telegram.org/bot{{ $('Bot Config1').first().json.botToken }}/sendMessage",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ JSON.stringify({ chat_id: $json.chatId, text: $json.text, reply_markup: { inline_keyboard: $json.rows } }) }}",
+        "options": {}
+      },
+      "id": "665b1fcd-dc67-472d-af72-0cdaa8818ab7",
+      "name": "Enviar Qty1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -384,
+        -7152
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const trigger = $('Telegram Trigger1').first().json;\nconst prodId = trigger.callback_query.data.replace('prod_', '');\nconst chatId = trigger.callback_query.message.chat.id;\n\nconst rows = [\n  [1,2,3,4,5].map(n => ({ text: `${n}`, callback_data: `qty_${prodId}_${n}` })),\n  [6,7,8,9,10].map(n => ({ text: `${n}`, callback_data: `qty_${prodId}_${n}` })),\n  [\n    { text: '🔙 Volver al menú', callback_data: 'menu' },\n    { text: '✅ Finalizar pedido', callback_data: 'fin' }\n  ]\n];\n\nreturn [{ json: { chatId, text: '🔢 ¿Cuántas unidades querés agregar?', rows } }];"
+      },
+      "id": "74f85e14-78c9-409c-97f3-018c5f936a67",
+      "name": "Build Qty Menu1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -624,
+        -7152
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.telegram.org/bot{{ $('Bot Config1').first().json.botToken }}/sendMessage",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ JSON.stringify({ chat_id: $json.chatId, text: $json.text, parse_mode: 'Markdown', reply_markup: { inline_keyboard: $json.rows } }) }}",
+        "options": {}
+      },
+      "id": "afb7d33a-bc51-4509-93ed-da00ddddd946",
+      "name": "Enviar Productos1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -144,
+        -7376
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const cat = $input.first().json;\nconst chatId = $('Telegram Trigger1').first().json.callback_query.message.chat.id;\n\n// Soporte para respuesta plana (array) o con campo 'productos'\nconst productos = Array.isArray(cat.productos)\n  ? cat.productos\n  : Array.isArray(cat)\n    ? cat\n    : [];\n\nif (productos.length === 0) {\n  return [{ json: {\n    chatId,\n    text: '⚠️ Esta categoría no tiene productos disponibles.',\n    rows: [[{ text: '🔙 Volver al menú', callback_data: 'menu' }]]\n  }}];\n}\n\nconst rows = productos.map(p => ([\n  { text: `🛍️ ${p.nombre}  💲${p.precio}`, callback_data: `prod_${p.id}` }\n]));\n\n// Botones de navegación en la misma fila al final\nrows.push([\n  { text: '🔙 Volver al menú', callback_data: 'menu' },\n  { text: '✅ Finalizar pedido', callback_data: 'fin' }\n]);\n\nreturn [{ json: { chatId, text: `📦 *${cat.nombre || 'Productos'}*\\nElegí un producto:`, rows } }];"
+      },
+      "id": "a242ae7f-688b-4d95-b21d-fb7d0b7a65ae",
+      "name": "Build Prod Menu1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -384,
+        -7376
+      ]
+    },
+    {
+      "parameters": {
+        "url": "=http://host.docker.internal:8080/categorias/{{ $('Telegram Trigger1').first().json.callback_query.data.replace('cat_', '') }}",
+        "options": {}
+      },
+      "id": "2622746c-19d2-4684-9dcc-56a4faece229",
+      "name": "Get Productos1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -624,
+        -7376
+      ]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "sw-cat",
+                    "leftValue": "={{ $('Telegram Trigger1').first().json.callback_query.data }}",
+                    "rightValue": "cat_",
+                    "operator": {
+                      "type": "string",
+                      "operation": "startsWith"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Categoria"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "sw-prod",
+                    "leftValue": "={{ $('Telegram Trigger1').first().json.callback_query.data }}",
+                    "rightValue": "prod_",
+                    "operator": {
+                      "type": "string",
+                      "operation": "startsWith"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Producto"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "sw-qty",
+                    "leftValue": "={{ $('Telegram Trigger1').first().json.callback_query.data }}",
+                    "rightValue": "qty_",
+                    "operator": {
+                      "type": "string",
+                      "operation": "startsWith"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Cantidad"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "sw-menu",
+                    "leftValue": "={{ $('Telegram Trigger1').first().json.callback_query.data }}",
+                    "rightValue": "menu",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Menu"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "sw-fin",
+                    "leftValue": "={{ $('Telegram Trigger1').first().json.callback_query.data }}",
+                    "rightValue": "fin",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Finalizar"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "6ffb7cf7-509c-4281-bb20-2050c7984d93",
+                    "leftValue": "={{ $('Telegram Trigger1').first().json.callback_query.data }}",
+                    "rightValue": "cancelar",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "cancelar"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "none"
+        }
+      },
+      "id": "6d68a35f-5bbb-4596-a77d-047c82e307a1",
+      "name": "Tipo Callback1",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -1152,
+        -7152
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.telegram.org/bot{{ $('Bot Config1').first().json.botToken }}/sendMessage",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ JSON.stringify({ chat_id: $json.chatId, text: $json.text, reply_markup: { inline_keyboard: $json.rows } }) }}",
+        "options": {}
+      },
+      "id": "112e6c18-eadf-40e5-a493-edef2f63433e",
+      "name": "Enviar Categorias1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -1136,
+        -6608
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// El nodo HTTP devuelve el array completo como UN solo item en $input\nconst raw = $input.first().json;\nconst categorias = Array.isArray(raw) ? raw : $input.all().map(i => i.json);\n\nconst trigger = $('Telegram Trigger1').first().json;\nconst chatId = trigger.message?.chat?.id || trigger.callback_query?.message?.chat?.id;\nconst nombre = trigger.message?.from?.first_name || trigger.callback_query?.from?.first_name || 'Cliente';\n\nif (!categorias || categorias.length === 0) {\n  return [{ json: { chatId, text: '⚠️ No hay categorías disponibles por el momento.', rows: [] } }];\n}\n\nconst rows = categorias.map(cat => ([{ text: `📂 ${cat.nombre}`, callback_data: `cat_${cat.id}` }]));\n\nreturn [{ json: { chatId, text: `¡Hola ${nombre}! 👋\\nElegí una categoría para ver los productos:`, rows } }];"
+      },
+      "id": "19b8432b-040a-4e25-bf09-8d7355068008",
+      "name": "Build Cat Menu1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1280,
+        -6784
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "bottoken-field",
+              "name": "botToken",
+              "value": "8876753551:AAGZEDCtON3C3FpGSET4piXoO-kKk80q3lg",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "420427fb-63f1-4dce-b310-5fb33975a583",
+      "name": "Bot Config1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [
+        -1792,
+        -6976
+      ]
+    },
+    {
+      "parameters": {
+        "updates": [
+          "message",
+          "callback_query"
+        ],
+        "additionalFields": {}
+      },
+      "id": "6fd3276a-04c4-429e-b4fe-51263b31aca9",
+      "name": "Telegram Trigger1",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -2016,
+        -6976
+      ],
+      "webhookId": "7b073647-8ca2-497e-af0a-9f7065e870f2",
+      "retryOnFail": false,
+      "executeOnce": false,
+      "credentials": {
+        "telegramApi": {
+          "id": "F3eWeXAqY7iOSt6K",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "if-cond-cb",
+              "leftValue": "={{ $('Telegram Trigger1').first().json.callback_query }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "99dcc936-00b6-4f3c-ad0f-d410ef89bf07",
+      "name": "Es Callback?1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        -1632,
+        -6976
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.telegram.org/bot{{ $('Bot Config1').first().json.botToken }}/answerCallbackQuery",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ JSON.stringify({ callback_query_id: $('Telegram Trigger1').first().json.callback_query.id }) }}",
+        "options": {}
+      },
+      "id": "bda75853-4425-49d9-a9b6-39191f9d0dc5",
+      "name": "Answer Callback1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -1392,
+        -7152
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "method": "DELETE",
+        "url": "=http://host.docker.internal:8080/carrito/{{ $('Telegram Trigger1').first().json.callback_query.message.chat.id }}",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -832,
+        -6288
+      ],
+      "id": "d985e4f1-a9cb-4561-8161-14f76427e4e8",
+      "name": "Vaciar Carrito"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.telegram.org/bot{{ $('Bot Config1').first().json.botToken }}/sendMessage",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ JSON.stringify({ chat_id: $('Telegram Trigger1').first().json.callback_query.message.chat.id, text: '🗑️ *Carrito vaciado*\\n\\nCancelamos tu pedido. Cuando quieras empezar de nuevo, escribime. 👋', parse_mode: 'Markdown' }) }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -624,
+        -6288
+      ],
+      "id": "0ee35be1-e082-4e04-935a-0e4688b3634b",
+      "name": "Pedido Cancelado"
+    },
+    {
+      "parameters": {
+        "method": "DELETE",
+        "url": "=http://host.docker.internal:8080/carrito/{{ $('Telegram Trigger1').first().json.callback_query.message.chat.id }}",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "79117da5-3b5a-4e7c-b487-abb2a29f3cb1",
+      "name": "Limpiar Carrito (error stock)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        160,
+        -6480
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "45f1677f-6f00-4568-8da1-b629f66c2ff6",
+              "leftValue": "={{ $json.body.estado }}",
+              "rightValue": "CANCELADO",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -144,
+        -6560
+      ],
+      "id": "5d3b9a76-19fd-4854-b297-9abac3b2610a",
+      "name": "If"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook Estado": {
+      "main": [
+        [
+          {
+            "node": "Estado Pedido",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Estado Pedido": {
+      "main": [
+        [
+          {
+            "node": "Telegram Confirmado",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Telegram Cancelado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Pedido OK?": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Limpiar Carrito (error stock)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Categorias": {
+      "main": [
+        [
+          {
+            "node": "Build Cat Menu1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Confirmar Pedido1": {
+      "main": [
+        [
+          {
+            "node": "¿Pedido OK?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Cat Menu ": {
+      "main": [
+        [
+          {
+            "node": "Enviar Cat Menu1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Cat Menu1": {
+      "main": [
+        [
+          {
+            "node": "Build Cat Menu ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agregar al Carrito1": {
+      "main": [
+        [
+          {
+            "node": "Item Agregado1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parsear Qty1": {
+      "main": [
+        [
+          {
+            "node": "Agregar al Carrito1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Qty Menu1": {
+      "main": [
+        [
+          {
+            "node": "Enviar Qty1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Prod Menu1": {
+      "main": [
+        [
+          {
+            "node": "Enviar Productos1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Productos1": {
+      "main": [
+        [
+          {
+            "node": "Build Prod Menu1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tipo Callback1": {
+      "main": [
+        [
+          {
+            "node": "Get Productos1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Build Qty Menu1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Parsear Qty1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get Cat Menu1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Confirmar Pedido1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Vaciar Carrito",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Cat Menu1": {
+      "main": [
+        [
+          {
+            "node": "Enviar Categorias1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Bot Config1": {
+      "main": [
+        [
+          {
+            "node": "Es Callback?1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Trigger1": {
+      "main": [
+        [
+          {
+            "node": "Bot Config1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Es Callback?1": {
+      "main": [
+        [
+          {
+            "node": "Answer Callback1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get Categorias",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Answer Callback1": {
+      "main": [
+        [
+          {
+            "node": "Tipo Callback1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Vaciar Carrito": {
+      "main": [
+        [
+          {
+            "node": "Pedido Cancelado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limpiar Carrito (error stock)": {
+      "main": [
+        [
+          {
+            "node": "Sin Stock",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Limpiar Carrito (error stock)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Pedido Enviado1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "ac7bf628-7f48-4061-9035-38a9e9c5dec4",
+  "meta": {
+    "instanceId": "9de659e6371d31e357b4a841fcd80fabc49d04f890fc9066740cf7f018fd7332"
+  },
+  "id": "UKQGe0h0XPfOEgMd",
+  "tags": []
+}
