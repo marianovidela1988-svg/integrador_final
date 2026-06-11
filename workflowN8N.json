@@ -622,7 +622,7 @@
             {
               "id": "bottoken-field",
               "name": "botToken",
-              "value": "8876753551:AAGZEDCtON3C3FpGSET4piXoO-kKk80q3lg",
+              "value": "={{ $env.TELEGRAM_BOT_TOKEN }}",
               "type": "string"
             }
           ]
