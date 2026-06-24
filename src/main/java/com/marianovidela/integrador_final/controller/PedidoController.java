@@ -5,6 +5,7 @@ import com.marianovidela.integrador_final.model.Pedido;
 import com.marianovidela.integrador_final.service.PedidoService;
 import com.marianovidela.integrador_final.service.ProductoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
@@ -47,6 +48,30 @@ public class PedidoController {
     @GetMapping
     public List<Pedido> obtenerTodos() {
         return pedidoService.obtenerTodos();
+    }
+
+    // Historial paginado con filtros opcionales
+    @GetMapping("/historial")
+    public Map<String, Object> buscarHistorial(
+            @RequestParam(defaultValue = "0")  int    page,
+            @RequestParam(defaultValue = "10") int    size,
+            @RequestParam(defaultValue = "") String clienteNombre,
+            @RequestParam(defaultValue = "") String nombreProducto,
+            @RequestParam(defaultValue = "") String estado,
+            @RequestParam(required = false)  Double totalMin,
+            @RequestParam(required = false)  Double totalMax,
+            @RequestParam(defaultValue = "") String fecha) {
+
+        Page<Pedido> resultado = pedidoService.buscarHistorial(
+            page, size, clienteNombre, nombreProducto, estado, totalMin, totalMax, fecha);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("content",          resultado.getContent());
+        response.put("totalElements",    resultado.getTotalElements());
+        response.put("totalPages",       resultado.getTotalPages());
+        response.put("number",           resultado.getNumber());
+        response.put("numberOfElements", resultado.getNumberOfElements());
+        return response;
     }
 
     // Admin marca el pedido como CONFIRMADO o CANCELADO

@@ -1,6 +1,8 @@
 package com.marianovidela.integrador_final.repository;
 
 import com.marianovidela.integrador_final.model.Producto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -10,6 +12,9 @@ import java.util.Optional;
 
 public interface ProductoRepository extends JpaRepository<Producto, Long> {
     Optional<Producto> findByNombre(String nombre);
+
+    Page<Producto> findByCategoriaId(Long categoriaId, Pageable pageable);
+    Page<Producto> findByCategoriaIdAndNombreContainingIgnoreCase(Long categoriaId, String nombre, Pageable pageable);
 
 
     /* Forma robusta es hacer el descuento atómico en la base,

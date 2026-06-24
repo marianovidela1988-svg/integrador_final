@@ -9,6 +9,10 @@ import com.marianovidela.integrador_final.model.Producto;
 import com.marianovidela.integrador_final.repository.CategoriaRepository;
 import com.marianovidela.integrador_final.repository.ProductoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,6 +54,17 @@ public class ProductoService {
                 .orElseThrow(() -> new ResourceNotFoundException("Producto no encontrado"));
     }
 
+
+    // Obtener productos de una categoría paginados (con filtro opcional por nombre)
+    public Page<ProductoDTO> obtenerPorCategoriaPaginado(Long categoriaId, int page, int size, String nombre) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("nombre").ascending());
+        if (nombre != null && !nombre.isBlank()) {
+            return productoRepository.findByCategoriaIdAndNombreContainingIgnoreCase(categoriaId, nombre.trim(), pageable)
+                    .map(productoMapper::toDTO);
+        }
+        return productoRepository.findByCategoriaId(categoriaId, pageable)
+                .map(productoMapper::toDTO);
+    }
 
     // Crear Producto
     public ProductoDTO crear(ProductoDTO productoDto) {

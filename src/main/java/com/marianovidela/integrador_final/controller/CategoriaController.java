@@ -4,9 +4,12 @@ import com.marianovidela.integrador_final.dto.CategoriaDTO;
 import com.marianovidela.integrador_final.service.CategoriaService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/categorias")
@@ -27,6 +30,22 @@ public class CategoriaController {
         return categoriaService.obtenerTodos();
     }
 
+    // Obtener categorías paginadas (con filtro opcional por nombre)
+    @GetMapping("/paginadas")
+    public Map<String, Object> obtenerPaginadas(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "12") int size,
+            @RequestParam(defaultValue = "") String nombre) {
+        Page<CategoriaDTO> resultado = categoriaService.obtenerPaginado(page, size, nombre);
+        Map<String, Object> response = new HashMap<>();
+        response.put("content", resultado.getContent());
+        response.put("totalElements", resultado.getTotalElements());
+        response.put("totalPages", resultado.getTotalPages());
+        response.put("number", resultado.getNumber());
+        response.put("numberOfElements", resultado.getNumberOfElements());
+        return response;
+    }
+
     // Crear Categoria
     @PostMapping
     public CategoriaDTO crear(@Valid @RequestBody CategoriaDTO categoriaDTO) {
@@ -36,7 +55,7 @@ public class CategoriaController {
     // Actualizar Categoria
     @PutMapping
     public CategoriaDTO actualizar(@Valid @RequestBody CategoriaDTO categoriaDTO) {
-        return categoriaService.crear(categoriaDTO);
+        return categoriaService.guardar(categoriaDTO);
     }
 
     // Eliminar Categoria

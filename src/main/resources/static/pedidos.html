@@ -16,9 +16,9 @@
                     Pedidos Telegram
                     <span id="badge-pendientes" class="badge" style="display:none">0</span>
                 </h1>
-                <p class="header-subtitle">Los pedidos llegan automáticamente cuando un cliente confirma su compra.</p>
             </div>
         </div>
+        <a href="inicio.html" class="header-logo-center">📦 Stock Manager</a>
     </header>
 
     <main class="app-main">
@@ -28,9 +28,71 @@
             <button class="tab-btn" id="tab-historial" onclick="mostrarTab('historial')">Historial</button>
         </div>
 
+        <!-- Panel de filtros (solo visible en historial) -->
+        <div id="panel-filtros" class="panel" style="display: none;">
+            <p class="panel-title">Filtros</p>
+            <div class="form-grid">
+                <div class="form-field">
+                    <label>Cliente</label>
+                    <input type="text" id="f-cliente" placeholder="Nombre del cliente">
+                </div>
+                <div class="form-field">
+                    <label>Producto</label>
+                    <div class="custom-select" id="producto-select">
+                        <div class="custom-select-trigger" id="producto-trigger" onclick="toggleProductoDropdown()">
+                            <span id="producto-label">Todos</span>
+                            <span class="custom-select-arrow">▼</span>
+                        </div>
+                        <div class="custom-select-dropdown" id="producto-dropdown" style="display:none"></div>
+                    </div>
+                </div>
+                <div class="form-field">
+                    <label>Estado</label>
+                    <div class="custom-select" id="estado-select">
+                        <div class="custom-select-trigger" onclick="toggleEstadoDropdown()">
+                            <span id="estado-label">Todos</span>
+                            <span class="custom-select-arrow">▼</span>
+                        </div>
+                        <div class="custom-select-dropdown" id="estado-dropdown" style="display:none">
+                            <div class="custom-select-option clear-option" onclick="seleccionarEstado('', this)">Todos</div>
+                            <div class="custom-select-option estado-option-pendiente" onclick="seleccionarEstado('PENDIENTE', this)">Pendiente</div>
+                            <div class="custom-select-option estado-option-confirmado" onclick="seleccionarEstado('CONFIRMADO', this)">Confirmado</div>
+                            <div class="custom-select-option estado-option-cancelado" onclick="seleccionarEstado('CANCELADO', this)">Cancelado</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-field">
+                    <label>Total mínimo ($)</label>
+                    <input type="number" id="f-total-min" placeholder="0.00" min="0" step="0.01">
+                </div>
+                <div class="form-field">
+                    <label>Total máximo ($)</label>
+                    <input type="number" id="f-total-max" placeholder="Sin límite" min="0" step="0.01">
+                </div>
+                <div class="form-field">
+                    <label>Fecha</label>
+                    <input type="date" id="f-fecha">
+                </div>
+                <div class="form-field form-field-btn">
+                    <button class="btn btn-primary" onclick="aplicarFiltros()">Buscar</button>
+                </div>
+                <div class="form-field form-field-btn">
+                    <button class="btn" style="background:var(--bg); border:1.5px solid var(--border);" onclick="limpiarFiltros()">Limpiar</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contador (solo visible en historial) -->
+        <div id="toolbar-historial" class="stock-toolbar" style="display: none; margin-bottom: 14px;">
+            <span id="historial-contador" class="categorias-contador"></span>
+        </div>
+
         <div id="contenido-pedidos">
             <p class="msg-espera">Conectando con el servidor...</p>
         </div>
+
+        <!-- Paginación (solo visible en historial) -->
+        <div id="paginacion-historial" class="paginacion" style="display: none;"></div>
 
     </main>
 

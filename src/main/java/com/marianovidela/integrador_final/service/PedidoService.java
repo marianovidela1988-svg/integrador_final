@@ -7,9 +7,10 @@ import com.marianovidela.integrador_final.model.Pedido;
 import com.marianovidela.integrador_final.model.Producto;
 import com.marianovidela.integrador_final.repository.PedidoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 
 import java.util.List;
 import java.util.Objects;
@@ -68,6 +69,25 @@ public class PedidoService {
 
     public List<Pedido> obtenerTodos() {
         return pedidoRepository.findAllByOrderByFechaHoraDesc();
+    }
+
+    public Page<Pedido> buscarHistorial(int page, int size,
+                                        String clienteNombre, String nombreProducto,
+                                        String estado, Double totalMin, Double totalMax,
+                                        String fecha) {
+        return pedidoRepository.buscarHistorial(
+            blankToNull(clienteNombre),
+            blankToNull(nombreProducto),
+            blankToNull(estado),
+            totalMin,
+            totalMax,
+            blankToNull(fecha),
+            PageRequest.of(page, size)
+        );
+    }
+
+    private String blankToNull(String s) {
+        return (s == null || s.isBlank()) ? null : s;
     }
 
     @Transactional
