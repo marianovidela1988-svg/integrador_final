@@ -13,6 +13,7 @@
             <a href="stock.html" class="btn-back">← Categorías</a>
             <h1 class="page-title" id="categoria-titulo">Cargando...</h1>
         </div>
+        <a href="inicio.html" class="header-logo-center">📦 Stock Manager</a>
     </header>
 
     <main class="app-main">
@@ -43,7 +44,17 @@
         </div>
 
         <div class="panel">
-            <p class="panel-title">Productos</p>
+            <p class="panel-title">Buscar Producto</p>
+            <div class="form-inline">
+                <input type="text" id="filter-producto" placeholder="Buscar por nombre...">
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="stock-toolbar" style="margin-bottom: 16px;">
+                <p class="panel-title" style="margin-bottom: 0;">Productos</p>
+                <span id="productos-contador" class="categorias-contador"></span>
+            </div>
             <div class="tabla-container">
                 <table>
                     <thead>
@@ -59,6 +70,8 @@
                 </table>
             </div>
         </div>
+
+        <div id="paginacion-productos" class="paginacion"></div>
 
     </main>
 

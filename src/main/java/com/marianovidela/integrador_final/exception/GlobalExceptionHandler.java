@@ -46,4 +46,14 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(body);
     }
 
+    @ExceptionHandler(CategoriaConProductosException.class)
+    public ResponseEntity<Map<String, Object>> handleCategoriaConProductos(CategoriaConProductosException ex) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("error", "CATEGORIA_CON_PRODUCTOS");
+        body.put("mensaje", ex.getMessage());
+        body.put("categoria", ex.getCategoria());
+        body.put("cantidadProductos", ex.getCantidadProductos());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(body);
+    }
+
 }

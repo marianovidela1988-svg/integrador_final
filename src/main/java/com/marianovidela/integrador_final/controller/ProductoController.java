@@ -4,9 +4,12 @@ import com.marianovidela.integrador_final.dto.ProductoDTO;
 import com.marianovidela.integrador_final.service.ProductoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/productos")
@@ -31,6 +34,23 @@ public class ProductoController {
     @GetMapping("/nombre/{nombre}")
     public ProductoDTO obtenerPorNombre(@PathVariable String nombre) {
         return productoService.obtenerPorNombre(nombre);
+    }
+
+    // Obtener productos de una categoría paginados (con filtro opcional por nombre)
+    @GetMapping("/categoria/{categoriaId}/paginados")
+    public Map<String, Object> obtenerPorCategoriaPaginados(
+            @PathVariable Long categoriaId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "12") int size,
+            @RequestParam(defaultValue = "") String nombre) {
+        Page<ProductoDTO> resultado = productoService.obtenerPorCategoriaPaginado(categoriaId, page, size, nombre);
+        Map<String, Object> response = new HashMap<>();
+        response.put("content", resultado.getContent());
+        response.put("totalElements", resultado.getTotalElements());
+        response.put("totalPages", resultado.getTotalPages());
+        response.put("number", resultado.getNumber());
+        response.put("numberOfElements", resultado.getNumberOfElements());
+        return response;
     }
 
    // Crear Producto
