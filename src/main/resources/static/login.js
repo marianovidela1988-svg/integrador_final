@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 pass: p
             };
 
-            fetch(`http://localhost:8080/admin/login`, {
+            fetch(`/admin/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -29,10 +29,9 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .then(data => {
                 if (data.respuesta == "OK") {
-                    localStorage.setItem("adminUser", u);
                     window.location.href = "inicio.html";
                 } else {
-                    alert(data.mje || "Usuario o clave incorrectos");
+                    alert(data.mensaje || "Usuario o clave incorrectos");
                 }
             })
             .catch(error => {

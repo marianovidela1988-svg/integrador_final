@@ -6,7 +6,9 @@ import com.marianovidela.integrador_final.exception.ResourceNotFoundException;
 import com.marianovidela.integrador_final.mapper.AdministradorMapper;
 import com.marianovidela.integrador_final.model.Administrador;
 import com.marianovidela.integrador_final.repository.AdministradorRepository;
+import com.marianovidela.integrador_final.security.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,6 +20,10 @@ public class AdministradorService {
     private AdministradorRepository administradorRepository;
     @Autowired
     private AdministradorMapper administradorMapper;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private JwtService jwtService;
 
     // Obtener Administradores
     public List<AdministradorDTO> obtenerTodos() {
@@ -27,25 +33,28 @@ public class AdministradorService {
 
     // Registrar un administrador
     public AdministradorDTO registrarAdmin(AdministradorDTO administradorDTO){
-        Administrador administrador = administradorRepository.save(administradorMapper.toEntity(administradorDTO));
+        Administrador administrador = administradorMapper.toEntity(administradorDTO);
+        administrador.setPass(passwordEncoder.encode(administrador.getPass()));
+        administrador = administradorRepository.save(administrador);
         return administradorMapper.toDTO(administrador);
     }
 
     // Acceder como Administrador
-    public AdministradorRespuestaDTO login(String user, String pass){
+    public LoginResult login(String user, String pass){
 
-        Optional<Administrador> admin = administradorRepository
-                .findByUserAndPass(user, pass);
+        Optional<Administrador> admin = administradorRepository.findByUser(user);
         AdministradorRespuestaDTO response = new AdministradorRespuestaDTO();
 
-        if (admin.isPresent()) {
+        if (admin.isPresent() && passwordEncoder.matches(pass, admin.get().getPass())) {
             response.setRespuesta("OK");
             response.setMensaje("Ingreso Válido.");
-        } else {
-            response.setRespuesta("ERROR");
-            response.setMensaje("Ingreso Inválido, usuario y/o clave incorrecta");
+            String token = jwtService.generateToken(admin.get().getUser());
+            return new LoginResult(response, token);
         }
-        return response;
+
+        response.setRespuesta("ERROR");
+        response.setMensaje("Ingreso Inválido, usuario y/o clave incorrecta");
+        return new LoginResult(response, null);
     }
 
     // Eliminar Administrador
@@ -54,5 +63,11 @@ public class AdministradorService {
                 .orElseThrow(() -> new ResourceNotFoundException("Administrador no encontrado"));
         administradorRepository.delete(administrador);
         return administradorMapper.toDTO(administrador);
+    }
+
+    public record LoginResult(AdministradorRespuestaDTO respuesta, String token) {
+        public boolean isSuccessful() {
+            return token != null;
+        }
     }
 }
