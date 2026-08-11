@@ -174,7 +174,7 @@
         "sendBody": true,
         "contentType": "raw",
         "rawContentType": "application/json",
-        "body": "={{ JSON.stringify({ chat_id: $('Telegram Trigger1').first().json.callback_query.message.chat.id, text: '⚠️ *No se pudo confirmar el pedido*\\n\\n' + ($json.body && $json.body.mensaje ? $json.body.mensaje : 'No hay stock suficiente para uno de los productos.'), parse_mode: 'Markdown', reply_markup: { inline_keyboard: [ [{ text: '🏠 Volver al menú principal', callback_data: 'menu' }], [{ text: '✅ Finalizar', callback_data: 'cancelar' }] ] }  }) }}",
+        "body": "={{ JSON.stringify({ chat_id: $('Telegram Trigger1').first().json.callback_query.message.chat.id, text: '⚠️ *No se pudo confirmar el pedido*\\n\\n' + ($('Confirmar Pedido1').first().json.body && $('Confirmar Pedido1').first().json.body.mensaje ? $('Confirmar Pedido1').first().json.body.mensaje : 'No hay stock suficiente para uno de los productos.'), parse_mode: 'Markdown', reply_markup: { inline_keyboard: [ [{ text: '🏠 Volver al menú principal', callback_data: 'menu' }], [{ text: '✅ Finalizar', callback_data: 'cancelar' }] ] }  }) }}",
         "options": {}
       },
       "id": "7cb38e0e-b99e-4a58-b9da-8c6de4cd4b6c",
