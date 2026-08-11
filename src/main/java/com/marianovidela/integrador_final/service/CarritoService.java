@@ -2,6 +2,7 @@ package com.marianovidela.integrador_final.service;
 
 import com.marianovidela.integrador_final.dto.ItemPedidoDTO;
 import com.marianovidela.integrador_final.dto.PedidoWebhookDTO;
+import com.marianovidela.integrador_final.exception.CantidadInvalidaException;
 import com.marianovidela.integrador_final.exception.CarritoVacioException;
 import com.marianovidela.integrador_final.exception.ResourceNotFoundException;
 import com.marianovidela.integrador_final.model.Pedido;
@@ -16,6 +17,11 @@ import java.util.concurrent.ConcurrentHashMap;
 @Service
 public class CarritoService {
 
+    // Mismo rango que ofrecen los botones de cantidad del bot de Telegram (n8n,
+    // nodo "Build Qty Menu1"); antes solo se imponía del lado del cliente.
+    private static final int CANTIDAD_MINIMA = 1;
+    private static final int CANTIDAD_MAXIMA = 10;
+
     private final Map<String, List<ItemPedidoDTO>> carritos = new ConcurrentHashMap<>();
 
     @Autowired
@@ -25,6 +31,10 @@ public class CarritoService {
     private PedidoService pedidoService;
 
     public List<ItemPedidoDTO> agregarItem(String chatId, Long productoId, Integer cantidad) {
+        if (cantidad == null || cantidad < CANTIDAD_MINIMA || cantidad > CANTIDAD_MAXIMA) {
+            throw new CantidadInvalidaException(cantidad, CANTIDAD_MINIMA, CANTIDAD_MAXIMA);
+        }
+
         Producto producto = productoRepository.findById(productoId)
                 .orElseThrow(() -> new ResourceNotFoundException("Producto no encontrado con ID: " + productoId));
 

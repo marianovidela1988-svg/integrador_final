@@ -41,4 +41,32 @@ class CarritoControllerTest {
                 .andExpect(jsonPath("$.error").value("CARRITO_VACIO"))
                 .andExpect(jsonPath("$.chatId").value(chatId));
     }
+
+    @Test
+    void agregarItemConCantidadCeroDevuelve400() throws Exception {
+        agregarItemYEsperarCantidadInvalida(0);
+    }
+
+    @Test
+    void agregarItemConCantidadNegativaDevuelve400() throws Exception {
+        agregarItemYEsperarCantidadInvalida(-5);
+    }
+
+    @Test
+    void agregarItemConCantidadMayorA10Devuelve400() throws Exception {
+        agregarItemYEsperarCantidadInvalida(11);
+    }
+
+    private void agregarItemYEsperarCantidadInvalida(int cantidad) throws Exception {
+        String chatId = "test-chat-" + UUID.randomUUID();
+
+        mockMvc.perform(post("/carrito/" + chatId + "/item")
+                        .header("X-N8N-Api-Key", N8N_API_KEY_DEV_DEFAULT)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"productoId\": 1, \"cantidad\": " + cantidad + "}"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").value("CANTIDAD_INVALIDA"))
+                .andExpect(jsonPath("$.minimo").value(1))
+                .andExpect(jsonPath("$.maximo").value(10));
+    }
 }

@@ -46,6 +46,18 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(body);
     }
 
+    // Handler global para devolver 400 Bad Request con JSON limpio (Cantidad fuera de rango)
+    @ExceptionHandler(CantidadInvalidaException.class)
+    public ResponseEntity<Map<String, Object>> handleCantidadInvalida(CantidadInvalidaException ex) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("error", "CANTIDAD_INVALIDA");
+        body.put("mensaje", ex.getMessage());
+        body.put("cantidad", ex.getCantidad());
+        body.put("minimo", ex.getMinimo());
+        body.put("maximo", ex.getMaximo());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
+    }
+
     // Handler global para devolver 400 Bad Request con JSON limpio (Carrito vacío al confirmar)
     @ExceptionHandler(CarritoVacioException.class)
     public ResponseEntity<Map<String, Object>> handleCarritoVacio(CarritoVacioException ex) {
