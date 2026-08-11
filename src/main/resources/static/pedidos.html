@@ -5,8 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pedidos Telegram — Stock Manager</title>
     <link rel="stylesheet" href="style.css">
+    <script src="auth-guard.js"></script>
 </head>
-<body>
+<body class="auth-pending">
 
     <header class="app-header">
         <div class="header-left">
@@ -19,6 +20,7 @@
             </div>
         </div>
         <a href="inicio.html" class="header-logo-center">📦 Stock Manager</a>
+        <button id="btn-logout" class="btn-back">Cerrar sesión</button>
     </header>
 
     <main class="app-main">

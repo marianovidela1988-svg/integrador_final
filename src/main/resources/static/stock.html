@@ -5,8 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Control de Stock — Stock Manager</title>
     <link rel="stylesheet" href="style.css">
+    <script src="auth-guard.js"></script>
 </head>
-<body>
+<body class="auth-pending">
 
     <header class="app-header">
         <div class="header-left">
@@ -14,6 +15,7 @@
             <h1 class="page-title">Control de Stock</h1>
         </div>
         <a href="inicio.html" class="header-logo-center">📦 Stock Manager</a>
+        <button id="btn-logout" class="btn-back">Cerrar sesión</button>
     </header>
 
     <main class="app-main">

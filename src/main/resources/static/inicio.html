@@ -5,14 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inicio — Stock Manager</title>
     <link rel="stylesheet" href="style.css">
+    <script src="auth-guard.js"></script>
 </head>
-<body>
+<body class="auth-pending">
 
     <header class="app-header">
         <div class="header-left">
             <div class="app-logo">📦 Stock Manager</div>
         </div>
         <span id="welcome-msg" class="welcome-text"></span>
+        <button id="btn-logout" class="btn-back">Cerrar sesión</button>
     </header>
 
     <div class="inicio-content">

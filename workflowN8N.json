@@ -188,7 +188,7 @@
     },
     {
       "parameters": {
-        "url": "http://host.docker.internal:8080/categorias",
+        "url": "http://localhost:8080/categorias",
         "options": {}
       },
       "id": "f19a93d8-eb3b-4093-9bd6-1d0e9ece628d",
@@ -222,7 +222,16 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "=http://host.docker.internal:8080/carrito/{{ $('Telegram Trigger1').first().json.callback_query.message.chat.id }}/confirmar",
+        "url": "=http://localhost:8080/carrito/{{ $('Telegram Trigger1').first().json.callback_query.message.chat.id }}/confirmar",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-N8N-Api-Key",
+              "value": "={{ $env.N8N_API_KEY }}"
+            }
+          ]
+        },
         "sendBody": true,
         "contentType": "raw",
         "rawContentType": "application/json",
@@ -279,7 +288,7 @@
     },
     {
       "parameters": {
-        "url": "http://host.docker.internal:8080/categorias",
+        "url": "http://localhost:8080/categorias",
         "options": {}
       },
       "id": "c003833d-c816-4eee-81ac-80807d11beb0",
@@ -313,7 +322,16 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "=http://host.docker.internal:8080/carrito/{{ $json.chatId }}/item",
+        "url": "=http://localhost:8080/carrito/{{ $json.chatId }}/item",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-N8N-Api-Key",
+              "value": "={{ $env.N8N_API_KEY }}"
+            }
+          ]
+        },
         "sendBody": true,
         "contentType": "raw",
         "rawContentType": "application/json",
@@ -408,7 +426,7 @@
     },
     {
       "parameters": {
-        "url": "=http://host.docker.internal:8080/categorias/{{ $('Telegram Trigger1').first().json.callback_query.data.replace('cat_', '') }}",
+        "url": "=http://localhost:8080/categorias/{{ $('Telegram Trigger1').first().json.callback_query.data.replace('cat_', '') }}",
         "options": {}
       },
       "id": "2622746c-19d2-4684-9dcc-56a4faece229",
@@ -721,7 +739,16 @@
     {
       "parameters": {
         "method": "DELETE",
-        "url": "=http://host.docker.internal:8080/carrito/{{ $('Telegram Trigger1').first().json.callback_query.message.chat.id }}",
+        "url": "=http://localhost:8080/carrito/{{ $('Telegram Trigger1').first().json.callback_query.message.chat.id }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-N8N-Api-Key",
+              "value": "={{ $env.N8N_API_KEY }}"
+            }
+          ]
+        },
         "options": {
           "response": {
             "response": {
@@ -731,7 +758,7 @@
         }
       },
       "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.4,
+      "typeVersion": 4.3,
       "position": [
         -832,
         -6288
@@ -750,7 +777,7 @@
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.4,
+      "typeVersion": 4.3,
       "position": [
         -624,
         -6288
@@ -761,7 +788,16 @@
     {
       "parameters": {
         "method": "DELETE",
-        "url": "=http://host.docker.internal:8080/carrito/{{ $('Telegram Trigger1').first().json.callback_query.message.chat.id }}",
+        "url": "=http://localhost:8080/carrito/{{ $('Telegram Trigger1').first().json.callback_query.message.chat.id }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-N8N-Api-Key",
+              "value": "={{ $env.N8N_API_KEY }}"
+            }
+          ]
+        },
         "options": {
           "response": {
             "response": {

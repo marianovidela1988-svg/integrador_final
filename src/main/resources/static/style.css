@@ -232,6 +232,10 @@ input::placeholder { color: var(--text-light); }
     color: white;
 }
 
+.auth-pending {
+    visibility: hidden;
+}
+
 .btn-delete-cat {
     background: #fef2f2;
     color: var(--red);
