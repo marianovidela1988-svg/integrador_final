@@ -2,6 +2,7 @@ package com.marianovidela.integrador_final.service;
 
 import com.marianovidela.integrador_final.dto.ItemPedidoDTO;
 import com.marianovidela.integrador_final.dto.PedidoWebhookDTO;
+import com.marianovidela.integrador_final.exception.CarritoVacioException;
 import com.marianovidela.integrador_final.exception.ResourceNotFoundException;
 import com.marianovidela.integrador_final.model.Pedido;
 import com.marianovidela.integrador_final.model.Producto;
@@ -53,7 +54,7 @@ public class CarritoService {
     public Pedido confirmarPedido(String chatId, String clienteNombre) {
         List<ItemPedidoDTO> items = obtenerCarrito(chatId);
         if (items.isEmpty()) {
-            throw new RuntimeException("El carrito está vacío");
+            throw new CarritoVacioException(chatId);
         }
 
         PedidoWebhookDTO dto = new PedidoWebhookDTO();
