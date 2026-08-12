@@ -1,0 +1,21 @@
+graph LR
+    subgraph Cliente["Cliente"]
+        Browser["Navegador<br/>SPA HTML/JS"]
+        TelegramApp["App de Telegram"]
+    end
+    subgraph Servidor["Servidor (Spring Boot)"]
+        Static["Contenido estático<br/>login, inicio, stock, pedidos"]
+        API["API REST<br/>Productos / Categorías / Pedidos / Carrito / Admin"]
+    end
+    DB[("MySQL<br/>proyecto_final")]
+    N8N["n8n<br/>Automatización de flujos"]
+    TelegramAPI["API de Telegram<br/>(BotFather)"]
+
+    Browser -- "HTTP fetch (JWT cookie)" --> API
+    Browser -. sirve .-> Static
+    API -- "JPA / Hibernate" --> DB
+    TelegramApp <--> TelegramAPI
+    TelegramAPI -- Webhook --> N8N
+    N8N -- "REST (X-N8N-Api-Key)" --> API
+    API -- "Webhook estado-pedido" --> N8N
+    N8N -- sendMessage --> TelegramAPI
