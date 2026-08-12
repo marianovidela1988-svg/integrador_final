@@ -1,0 +1,15 @@
+n = 20
+TPP pretest:  media = 130.25 s, DE = 47.92 s
+TPP postest:  media = 32.25 s, DE = 11.19 s
+Diferencia de medias = 98.00 s (reducción del 75.2%)
+Mediana de las diferencias pareadas = 89.00 s
+Todas las diferencias favorecen al postest: True
+
+Shapiro-Wilk (diferencias): W = 0.818, p = 0.0016
+
+Wilcoxon, aproximación normal: W+ = 210, Z = 3.9199, p (bilateral) = 0.000089, r = |Z|/√n = 0.8765
+Wilcoxon, cálculo exacto: p (bilateral) = 1.907e-06
+
+Bootstrap percentil (10000 remuestreos, semilla=42) para la mediana de las diferencias:
+  Mediana observada = 89.00 s
+  IC95% = [75.00; 95.00] s
