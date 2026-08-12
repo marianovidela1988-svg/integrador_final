@@ -1,0 +1,50 @@
+erDiagram
+    CATEGORIAS ||--o{ PRODUCTOS : contiene
+    PEDIDOS ||--o{ ITEMS_PEDIDO : contiene
+    USUARIOS |o--o{ PEDIDOS : "planificado, no implementado"
+
+    ADMINISTRADORES {
+        bigint id PK
+        varchar user
+        varchar pass
+        varchar nombre
+        varchar apellido
+    }
+    CATEGORIAS {
+        bigint id PK
+        varchar nombre
+    }
+    PRODUCTOS {
+        bigint id PK
+        varchar nombre
+        varchar descripcion
+        double precio
+        int stock
+        bigint categoria_id FK
+    }
+    PEDIDOS {
+        bigint id PK
+        varchar cliente_nombre
+        varchar chat_id
+        double total
+        varchar estado
+        varchar fecha_hora
+    }
+    ITEMS_PEDIDO {
+        bigint id PK
+        bigint producto_id "sin FK declarada"
+        varchar nombre "snapshot al momento de compra"
+        int cantidad
+        double precio "snapshot al momento de compra"
+        double subtotal
+        bigint pedido_id FK
+    }
+    USUARIOS {
+        bigint id PK
+        varchar nombre
+        varchar apellido
+        varchar email
+        varchar dni
+        varchar direccion
+        bigint telefono
+    }

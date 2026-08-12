@@ -1,0 +1,28 @@
+sequenceDiagram
+    actor Cliente
+    participant TG as Telegram
+    participant N8N as n8n
+    participant API as Backend (API REST)
+    participant DB as MySQL
+    actor Admin
+
+    Cliente->>TG: Selecciona categoría / producto / cantidad (botones)
+    TG->>N8N: callback_query (Telegram Trigger)
+    N8N->>API: POST /carrito/{chatId}/item
+    API-->>N8N: 200 OK (carrito en memoria)
+    N8N->>TG: sendMessage (ítem agregado)
+    TG->>Cliente: Confirmación en el chat
+
+    Cliente->>TG: Confirmar pedido
+    TG->>N8N: callback_query (fin)
+    N8N->>API: POST /carrito/{chatId}/confirmar
+    API->>DB: INSERT pedidos, items_pedido
+    API-->>N8N: 200 OK / 400 (stock insuficiente o carrito vacío)
+    N8N->>TG: sendMessage (pedido enviado o error)
+    TG->>Cliente: Notificación
+
+    Admin->>API: PUT /pedidos/{id}/estado (confirmar o cancelar)
+    API->>DB: UPDATE pedidos.estado
+    API->>N8N: POST webhook/estado-pedido
+    N8N->>TG: sendMessage (estado actualizado)
+    TG->>Cliente: Notificación de estado
