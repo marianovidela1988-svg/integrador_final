@@ -10,7 +10,10 @@
       "Bash(cp \"C:\\\\Users\\\\nacho\\\\OneDrive\\\\Documentos\\\\UTN\\\\TESIS\\\\integrador_final\\\\docs\\\\Plantilla_Experimento_Pretest_Postest.xlsx\" \"C:\\\\Users\\\\nacho\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Users-nacho-OneDrive-Documentos-UTN-TESIS-integrador-final\\\\06fd6d14-3d7a-4e14-a6b3-e824d4533304\\\\scratchpad\\\\plantilla_copy.xlsx\")",
       "Bash(pip install *)",
       "Bash(mkdir -p \"C:\\\\Users\\\\nacho\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Users-nacho-OneDrive-Documentos-UTN-TESIS-integrador-final\\\\0a3acae1-bd47-4199-aff2-2fe6deae14be\\\\scratchpad\")",
-      "Read(//c/Users/nacho/OneDrive/Documentos/UTN/TESIS/**)"
+      "Read(//c/Users/nacho/OneDrive/Documentos/UTN/TESIS/**)",
+      "Bash(where python *)",
+      "Bash(where pdftotext *)",
+      "Bash(where pip *)"
     ]
   }
 }
