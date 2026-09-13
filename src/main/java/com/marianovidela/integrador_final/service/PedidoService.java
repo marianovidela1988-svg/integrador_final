@@ -94,13 +94,29 @@ public class PedidoService {
     public Pedido cambiarEstado(Long id, String estado) {
         Pedido pedido = pedidoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Pedido no encontrado con ID: " + id));
-        // Validar y descontar stock
-        if(Objects.equals(estado, "CONFIRMADO")){
-            for (ItemPedido p : pedido.getItems()){
-                productoService.descontarStock(p.getProductoId(), p.getCantidad());
+
+        if (Objects.equals(estado, "CONFIRMADO")) {
+            // Transición atómica en la base (ver PedidoRepository.marcarComoConfirmadoSiNoLoEstaba):
+            // un chequeo en memoria (leer estado, decidir, escribir) no alcanza, porque dos
+            // peticiones de confirmación casi simultáneas sobre el mismo pedido (doble clic,
+            // reintento de red) pueden leer "todavía no confirmado" antes de que la primera
+            // termine de guardar, y las dos terminan descontando el stock. Con el UPDATE
+            // condicional, la base bloquea la fila y solo una de las dos puede ganar la carrera.
+            int filasActualizadas = pedidoRepository.marcarComoConfirmadoSiNoLoEstaba(id, estado);
+            if (filasActualizadas > 0) {
+                for (ItemPedido p : pedido.getItems()){
+                    productoService.descontarStock(p.getProductoId(), p.getCantidad());
+                }
             }
+            // El UPDATE en bloque no pasa por el contexto de persistencia de esta transacción:
+            // reflejamos el estado ya confirmado en el objeto en memoria para la respuesta,
+            // sin volver a leerlo (un findById acá devolvería el objeto viejo cacheado).
+            pedido.setEstado("CONFIRMADO");
+        } else {
+            pedido.setEstado(estado);
+            pedidoRepository.save(pedido);
         }
-        pedido.setEstado(estado);
-        return pedidoRepository.save(pedido);
+
+        return pedido;
     }
 }

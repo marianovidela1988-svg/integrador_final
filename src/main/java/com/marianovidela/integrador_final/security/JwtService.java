@@ -22,12 +22,15 @@ public class JwtService {
 
     private final SecretKey signingKey;
     private final Duration expiration;
+    private final boolean cookieSecure;
 
     public JwtService(
             @Value("${jwt.secret}") String secret,
-            @Value("${jwt.expiration-minutes}") long expirationMinutes) {
+            @Value("${jwt.expiration-minutes}") long expirationMinutes,
+            @Value("${jwt.cookie.secure}") boolean cookieSecure) {
         this.signingKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
         this.expiration = Duration.ofMinutes(expirationMinutes);
+        this.cookieSecure = cookieSecure;
     }
 
     public String generateToken(String username) {
@@ -60,7 +63,7 @@ public class JwtService {
     public ResponseCookie buildCookie(String token) {
         return ResponseCookie.from(COOKIE_NAME, token)
                 .httpOnly(true)
-                .secure(false)
+                .secure(cookieSecure)
                 .sameSite("Strict")
                 .path("/")
                 .maxAge(expiration)
@@ -70,7 +73,7 @@ public class JwtService {
     public ResponseCookie buildLogoutCookie() {
         return ResponseCookie.from(COOKIE_NAME, "")
                 .httpOnly(true)
-                .secure(false)
+                .secure(cookieSecure)
                 .sameSite("Strict")
                 .path("/")
                 .maxAge(0)

@@ -1,15 +1,22 @@
-n = 20
-TPP pretest:  media = 130.25 s, DE = 47.92 s
-TPP postest:  media = 32.25 s, DE = 11.19 s
-Diferencia de medias = 98.00 s (reducción del 75.2%)
-Mediana de las diferencias pareadas = 89.00 s
-Todas las diferencias favorecen al postest: True
+n = 20 pares (N = 40 observaciones totales)
+TPP pretest:  media = 39.30 s, DE = 19.51 s, mediana = 32.00 s
+TPP postest:  media = 25.60 s, DE = 10.52 s, mediana = 21.50 s
 
-Shapiro-Wilk (diferencias): W = 0.818, p = 0.0016
+Diferencia de medias      = 13.70 s (reduccion del 34.9% sobre la media del pretest)
+Mediana de las diferencias = 11.50 s (reduccion del 35.9% sobre la mediana del pretest) <- ESTA es la cifra que corresponde al contraste no parametrico y al IC bootstrap de abajo, NO la resta de las medianas por separado (32.00-21.50=10.50), que es una cifra distinta (ver hallazgo C11 de la auditoria: mediana de diferencias != diferencia de medianas).
+Diferencias que favorecen al postest: 19 de 20 (favorecen al pretest: 1, empates: 0)
 
-Wilcoxon, aproximación normal: W+ = 210, Z = 3.9199, p (bilateral) = 0.000089, r = |Z|/√n = 0.8765
-Wilcoxon, cálculo exacto: p (bilateral) = 1.907e-06
+Shapiro-Wilk (diferencias): W = 0.892, p = 0.0293
+-> Se usa Wilcoxon (no parametrico)
+
+Wilcoxon, valor EXACTO (principal): W+ = 3.0, p (bilateral) = 9.537e-06
+Wilcoxon, aproximacion normal (contraste secundario): W+ = 3.0, z = -3.7919, p (bilateral) = 0.000149
+
+Tamano del efecto r = z/sqrt(N):
+  con N = 40 (observaciones totales, Rosenthal 1991, PRINCIPAL): r = -0.5996
+  con n = 20 (pares, como declaraba la version anterior del informe): r = -0.8479
 
 Bootstrap percentil (10000 remuestreos, semilla=42) para la mediana de las diferencias:
-  Mediana observada = 89.00 s
-  IC95% = [75.00; 95.00] s
+  Mediana observada = 11.50 s
+  IC95% = [8.00; 16.00] s
+  (Esta es la MEDIANA DE LAS DIFERENCIAS, la cifra que debe acompanar al 35.9% de reduccion informado como principal, NO la resta de las medianas por separado.)

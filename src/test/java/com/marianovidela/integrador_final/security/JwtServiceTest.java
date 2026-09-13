@@ -13,7 +13,7 @@ class JwtServiceTest {
 
     @Test
     void unTokenValidoDecodificaAlUsernameCorrecto() {
-        JwtService jwtService = new JwtService(SECRET, 60);
+        JwtService jwtService = new JwtService(SECRET, 60, false);
 
         String token = jwtService.generateToken("admin1");
         Optional<String> username = jwtService.validateAndGetUsername(token);
@@ -23,7 +23,7 @@ class JwtServiceTest {
 
     @Test
     void unTokenExpiradoEsRechazado() {
-        JwtService jwtService = new JwtService(SECRET, -1);
+        JwtService jwtService = new JwtService(SECRET, -1, false);
 
         String token = jwtService.generateToken("admin1");
         Optional<String> username = jwtService.validateAndGetUsername(token);
@@ -33,8 +33,8 @@ class JwtServiceTest {
 
     @Test
     void unTokenFirmadoConOtroSecretoEsRechazado() {
-        JwtService emisor = new JwtService(SECRET, 60);
-        JwtService verificador = new JwtService("otro-secreto-completamente-distinto-32ch", 60);
+        JwtService emisor = new JwtService(SECRET, 60, false);
+        JwtService verificador = new JwtService("otro-secreto-completamente-distinto-32ch", 60, false);
 
         String token = emisor.generateToken("admin1");
         Optional<String> username = verificador.validateAndGetUsername(token);
@@ -44,7 +44,7 @@ class JwtServiceTest {
 
     @Test
     void unTokenConTextoInvalidoEsRechazado() {
-        JwtService jwtService = new JwtService(SECRET, 60);
+        JwtService jwtService = new JwtService(SECRET, 60, false);
 
         Optional<String> username = jwtService.validateAndGetUsername("esto-no-es-un-jwt");
 

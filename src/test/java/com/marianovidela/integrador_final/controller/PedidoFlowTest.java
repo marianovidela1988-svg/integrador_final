@@ -117,6 +117,76 @@ class PedidoFlowTest extends AdminAuthenticatedTestBase {
     }
 
     @Test
+    void confirmarEstadoDosVecesNoDescuentaStockDosVeces() throws Exception {
+        // Reproduce el hallazgo de la re-ejecución del experimento (Anexo A, Fase 3):
+        // una confirmación duplicada del mismo pedido (doble clic, reintento de red)
+        // no debe descontar el stock una segunda vez.
+        Producto producto = crearProductoConStock(10);
+        String chatId = "chat-" + UUID.randomUUID();
+        agregarItem(chatId, producto.getId(), 3);
+
+        MvcResult confirmarResult = mockMvc.perform(post("/carrito/" + chatId + "/confirmar")
+                        .header("X-N8N-Api-Key", N8N_API_KEY)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{}"))
+                .andExpect(status().isOk())
+                .andReturn();
+        long pedidoId = objectMapper.readTree(confirmarResult.getResponse().getContentAsString()).get("id").asLong();
+
+        // Primera confirmación: descuenta stock (10 - 3 = 7).
+        mockMvc.perform(put("/pedidos/" + pedidoId + "/estado")
+                        .cookie(jwtCookie)
+                        .param("estado", "CONFIRMADO"))
+                .andExpect(status().isOk());
+
+        // Segunda confirmación sobre el mismo pedido, ya CONFIRMADO: no debe volver a descontar.
+        mockMvc.perform(put("/pedidos/" + pedidoId + "/estado")
+                        .cookie(jwtCookie)
+                        .param("estado", "CONFIRMADO"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.estado").value("CONFIRMADO"));
+
+        entityManager.clear();
+        Producto actualizado = productoRepository.findById(producto.getId()).orElseThrow();
+        assertEquals(7, actualizado.getStock());
+    }
+
+    @Test
+    void agregarMismoProductoDosVecesAcumulaMasDe10YQuedaCanceladoSiFaltaStock() throws Exception {
+        // CANTIDAD_MAXIMA=10 en CarritoService es el límite del menú de botones de
+        // Telegram por interacción, no un tope de negocio por producto: el cliente
+        // puede volver a elegir el mismo producto y la cantidad se acumula sin límite.
+        // Al confirmar, el pedido se valida contra el stock real como cualquier otro.
+        Producto producto = crearProductoConStock(15);
+        String chatId = "chat-" + UUID.randomUUID();
+        agregarItem(chatId, producto.getId(), 10);
+        agregarItem(chatId, producto.getId(), 10);
+
+        mockMvc.perform(post("/carrito/" + chatId + "/confirmar")
+                        .header("X-N8N-Api-Key", N8N_API_KEY)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.estado").value("CANCELADO"));
+    }
+
+    @Test
+    void agregarMismoProductoDosVecesAcumulaMasDe10YQuedaPendienteSiAlcanzaElStock() throws Exception {
+        Producto producto = crearProductoConStock(25);
+        String chatId = "chat-" + UUID.randomUUID();
+        agregarItem(chatId, producto.getId(), 10);
+        agregarItem(chatId, producto.getId(), 10);
+
+        mockMvc.perform(post("/carrito/" + chatId + "/confirmar")
+                        .header("X-N8N-Api-Key", N8N_API_KEY)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.estado").value("PENDIENTE"))
+                .andExpect(jsonPath("$.total").value(1000.0));
+    }
+
+    @Test
     void cambiarEstadoSinSesionDevuelve401() throws Exception {
         mockMvc.perform(put("/pedidos/1/estado").param("estado", "CONFIRMADO"))
                 .andExpect(status().isUnauthorized());

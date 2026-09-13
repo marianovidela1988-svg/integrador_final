@@ -17,7 +17,7 @@ sequenceDiagram
     TG->>N8N: callback_query (fin)
     N8N->>API: POST /carrito/{chatId}/confirmar
     API->>DB: INSERT pedidos, items_pedido
-    API-->>N8N: 200 OK / 400 (stock insuficiente o carrito vacío)
+    API-->>N8N: 200 OK (PENDIENTE, o CANCELADO por stock insuficiente) / 400 (carrito vacío)
     N8N->>TG: sendMessage (pedido enviado o error)
     TG->>Cliente: Notificación
 
