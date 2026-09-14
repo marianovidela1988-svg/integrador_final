@@ -1,0 +1,58 @@
+classDiagram
+    class Categoria {
+        -Long id
+        -String nombre
+        -List~Producto~ productos
+    }
+
+    class Producto {
+        -Long id
+        -String nombre
+        -String descripcion
+        -Double precio
+        -Integer stock
+        -Categoria categoria
+    }
+
+    class Pedido {
+        -Long id
+        -String clienteNombre
+        -String chatId
+        -List~ItemPedido~ items
+        -Double total
+        -String estado
+        -String fechaHora
+        +prePersist()
+    }
+
+    class ItemPedido {
+        -Long id
+        -Long productoId
+        -String nombre
+        -Integer cantidad
+        -Double precio
+        -Double subtotal
+    }
+
+    class Usuario {
+        -Long id
+        -String nombre
+        -String apellido
+        -String email
+        -String dni
+        -String direccion
+        -long telefono
+    }
+
+    class Administrador {
+        -long id
+        -String user
+        -String pass
+        -String apellido
+        -String nombre
+    }
+
+    Categoria "1" --> "0..*" Producto : contiene
+    Pedido "1" *-- "1..*" ItemPedido : contiene (snapshot)
+    ItemPedido "0..*" ..> "1" Producto : referencia (producto_id, sin FK)
+    Usuario "1" ..> "0..*" Pedido : planificado, no implementado
