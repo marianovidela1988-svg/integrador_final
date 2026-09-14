@@ -41,3 +41,4 @@ classpath.txt
 ### Videos del experimento (>100MB, exceden el limite de GitHub; se comparten por Drive) ###
 docs/analisis/rerun/**/*.mov
 
+**/~$*
