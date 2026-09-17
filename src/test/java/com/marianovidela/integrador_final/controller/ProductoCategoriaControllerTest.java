@@ -7,6 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.Map;
 import java.util.UUID;
 
@@ -62,7 +63,7 @@ class ProductoCategoriaControllerTest extends AdminAuthenticatedTestBase {
                 .andReturn();
         long catId = objectMapper.readTree(catResult.getResponse().getContentAsString()).get("id").asLong();
 
-        ProductoDTO producto = new ProductoDTO(null, "Producto Test " + UUID.randomUUID(), "desc", 100.0, 10, catId);
+        ProductoDTO producto = new ProductoDTO(null, "Producto Test " + UUID.randomUUID(), "desc", new BigDecimal("100.0"), 10, catId);
 
         mockMvc.perform(post("/productos")
                         .cookie(jwtCookie)

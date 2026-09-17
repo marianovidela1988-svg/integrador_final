@@ -2,7 +2,6 @@ package com.marianovidela.integrador_final.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Getter
@@ -22,7 +21,7 @@ public class UsuarioDTO {
     private String dni;
     @NotBlank(message = "La dirección es obligatoria")
     private String direccion;
-    @NotNull(message = "El teléfono es obligatorio")
-    private Long telefono;
+    @NotBlank(message = "El teléfono es obligatorio")
+    private String telefono;
 
 }

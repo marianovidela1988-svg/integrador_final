@@ -2,6 +2,8 @@ package com.marianovidela.integrador_final.dto;
 
 import lombok.*;
 
+import java.math.BigDecimal;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -10,5 +12,5 @@ public class ItemPedidoDTO {
     private Long productoId;
     private String nombre;
     private Integer cantidad;
-    private Double precio;
+    private BigDecimal precio;
 }

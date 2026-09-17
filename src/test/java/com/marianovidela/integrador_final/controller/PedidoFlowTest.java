@@ -11,9 +11,13 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.UUID;
 
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -45,7 +49,7 @@ class PedidoFlowTest extends AdminAuthenticatedTestBase {
         Producto producto = new Producto();
         producto.setNombre("Producto Test " + UUID.randomUUID());
         producto.setDescripcion("desc");
-        producto.setPrecio(50.0);
+        producto.setPrecio(new BigDecimal("50.0"));
         producto.setStock(stock);
         producto.setCategoria(categoria);
         return productoRepository.save(producto);
@@ -184,6 +188,33 @@ class PedidoFlowTest extends AdminAuthenticatedTestBase {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.estado").value("PENDIENTE"))
                 .andExpect(jsonPath("$.total").value(1000.0));
+    }
+
+    @Test
+    void buscarHistorialFiltraPorFechaDelDia() throws Exception {
+        // Verifica el rango [00:00, 24:00) sobre fechaHora (LocalDateTime), que
+        // reemplazó al LIKE sobre string tras el cambio de tipo de fecha_hora.
+        Producto producto = crearProductoConStock(10);
+        String chatId = "chat-" + UUID.randomUUID();
+        agregarItem(chatId, producto.getId(), 1);
+        mockMvc.perform(post("/carrito/" + chatId + "/confirmar")
+                        .header("X-N8N-Api-Key", N8N_API_KEY)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{}"))
+                .andExpect(status().isOk());
+
+        String hoy = LocalDate.now().toString();
+        mockMvc.perform(get("/pedidos/historial")
+                        .cookie(jwtCookie)
+                        .param("fecha", hoy))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalElements").value(greaterThanOrEqualTo(1)));
+
+        mockMvc.perform(get("/pedidos/historial")
+                        .cookie(jwtCookie)
+                        .param("fecha", "2020-01-01"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalElements").value(0));
     }
 
     @Test

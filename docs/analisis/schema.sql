@@ -33,7 +33,7 @@ CREATE TABLE productos (
     id           BIGINT       NOT NULL AUTO_INCREMENT,
     nombre       VARCHAR(255),
     descripcion  VARCHAR(255),
-    precio       DOUBLE,
+    precio       DECIMAL(10,2),
     stock        INT,
     categoria_id BIGINT,
     PRIMARY KEY (id),
@@ -48,9 +48,9 @@ CREATE TABLE pedidos (
     id             BIGINT       NOT NULL AUTO_INCREMENT,
     cliente_nombre VARCHAR(255),
     chat_id        VARCHAR(255),
-    total          DOUBLE,
+    total          DECIMAL(10,2),
     estado         VARCHAR(255),
-    fecha_hora     VARCHAR(255),
+    fecha_hora     DATETIME,
     PRIMARY KEY (id)
 );
 
@@ -64,8 +64,8 @@ CREATE TABLE items_pedido (
     producto_id BIGINT,
     nombre      VARCHAR(255),
     cantidad    INT,
-    precio      DOUBLE,
-    subtotal    DOUBLE,
+    precio      DECIMAL(10,2),
+    subtotal    DECIMAL(10,2),
     pedido_id   BIGINT,
     PRIMARY KEY (id),
     CONSTRAINT fk_items_pedido_pedido
@@ -81,6 +81,6 @@ CREATE TABLE usuarios (
     email     VARCHAR(255),
     dni       VARCHAR(255),
     direccion VARCHAR(255),
-    telefono  BIGINT       NOT NULL,
+    telefono  VARCHAR(20)  NOT NULL,
     PRIMARY KEY (id)
 );

@@ -19,5 +19,5 @@ public class Usuario {
     private String email;
     private String dni;
     private String direccion;
-    private long telefono;
+    private String telefono;
 }

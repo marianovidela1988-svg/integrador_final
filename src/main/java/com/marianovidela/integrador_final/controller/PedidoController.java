@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,8 +59,8 @@ public class PedidoController {
             @RequestParam(defaultValue = "") String clienteNombre,
             @RequestParam(defaultValue = "") String nombreProducto,
             @RequestParam(defaultValue = "") String estado,
-            @RequestParam(required = false)  Double totalMin,
-            @RequestParam(required = false)  Double totalMax,
+            @RequestParam(required = false)  BigDecimal totalMin,
+            @RequestParam(required = false)  BigDecimal totalMax,
             @RequestParam(defaultValue = "") String fecha) {
 
         Page<Pedido> resultado = pedidoService.buscarHistorial(

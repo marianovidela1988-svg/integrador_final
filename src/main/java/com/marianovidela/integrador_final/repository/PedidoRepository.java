@@ -9,6 +9,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -31,7 +33,7 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long> {
         "(:estado IS NULL OR p.estado = :estado) AND " +
         "(:totalMin IS NULL OR p.total >= :totalMin) AND " +
         "(:totalMax IS NULL OR p.total <= :totalMax) AND " +
-        "(:fecha IS NULL OR p.fechaHora LIKE CONCAT(:fecha, '%')) " +
+        "(:fechaDesde IS NULL OR (p.fechaHora >= :fechaDesde AND p.fechaHora < :fechaHasta)) " +
         "ORDER BY p.fechaHora DESC",
     countQuery =
         "SELECT COUNT(DISTINCT p) FROM Pedido p LEFT JOIN p.items i WHERE " +
@@ -40,13 +42,14 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long> {
         "(:estado IS NULL OR p.estado = :estado) AND " +
         "(:totalMin IS NULL OR p.total >= :totalMin) AND " +
         "(:totalMax IS NULL OR p.total <= :totalMax) AND " +
-        "(:fecha IS NULL OR p.fechaHora LIKE CONCAT(:fecha, '%'))")
+        "(:fechaDesde IS NULL OR (p.fechaHora >= :fechaDesde AND p.fechaHora < :fechaHasta))")
     Page<Pedido> buscarHistorial(
         @Param("clienteNombre") String clienteNombre,
         @Param("nombreProducto") String nombreProducto,
         @Param("estado") String estado,
-        @Param("totalMin") Double totalMin,
-        @Param("totalMax") Double totalMax,
-        @Param("fecha") String fecha,
+        @Param("totalMin") BigDecimal totalMin,
+        @Param("totalMax") BigDecimal totalMax,
+        @Param("fechaDesde") LocalDateTime fechaDesde,
+        @Param("fechaHasta") LocalDateTime fechaHasta,
         Pageable pageable);
 }

@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -17,7 +19,7 @@ public class ProductoDTO {
     private String nombre;
     private String descripcion;
     @NotNull(message = "El precio es obligatorio")
-    private Double precio;
+    private BigDecimal precio;
     @NotNull(message = "El stock es obligatorio")
     private Integer stock;
     private Long categoriaId;

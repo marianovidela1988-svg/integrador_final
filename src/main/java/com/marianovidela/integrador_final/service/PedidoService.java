@@ -12,6 +12,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -36,12 +39,12 @@ public class PedidoService {
                     item.setNombre(itemDTO.getNombre());
                     item.setCantidad(itemDTO.getCantidad());
                     item.setPrecio(itemDTO.getPrecio());
-                    item.setSubtotal(itemDTO.getPrecio() * itemDTO.getCantidad());
+                    item.setSubtotal(itemDTO.getPrecio().multiply(BigDecimal.valueOf(itemDTO.getCantidad())));
                     return item;
                 }).toList();
 
         pedido.setItems(items);
-        pedido.setTotal(items.stream().mapToDouble(ItemPedido::getSubtotal).sum());
+        pedido.setTotal(items.stream().map(ItemPedido::getSubtotal).reduce(BigDecimal.ZERO, BigDecimal::add));
 
         /*
             Al llegar un pedido:
@@ -73,15 +76,27 @@ public class PedidoService {
 
     public Page<Pedido> buscarHistorial(int page, int size,
                                         String clienteNombre, String nombreProducto,
-                                        String estado, Double totalMin, Double totalMax,
+                                        String estado, BigDecimal totalMin, BigDecimal totalMax,
                                         String fecha) {
+        // El filtro llega como fecha de dia calendario (input type="date": "AAAA-MM-DD").
+        // Como fechaHora ahora es un LocalDateTime, se convierte a un rango [00:00, 24:00)
+        // de ese dia en vez de comparar el string crudo con LIKE.
+        LocalDateTime fechaDesde = null;
+        LocalDateTime fechaHasta = null;
+        if (fecha != null && !fecha.isBlank()) {
+            LocalDate dia = LocalDate.parse(fecha);
+            fechaDesde = dia.atStartOfDay();
+            fechaHasta = fechaDesde.plusDays(1);
+        }
+
         return pedidoRepository.buscarHistorial(
             blankToNull(clienteNombre),
             blankToNull(nombreProducto),
             blankToNull(estado),
             totalMin,
             totalMax,
-            blankToNull(fecha),
+            fechaDesde,
+            fechaHasta,
             PageRequest.of(page, size)
         );
     }

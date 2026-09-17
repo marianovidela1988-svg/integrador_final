@@ -3,6 +3,7 @@ package com.marianovidela.integrador_final.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 
 @Entity
 @Table(name = "productos")
@@ -17,7 +18,8 @@ public class Producto {
     private Long id;
     private String nombre;
     private String descripcion;
-    private Double precio;
+    @Column(precision = 10, scale = 2)
+    private BigDecimal precio;
     private Integer stock;
     @ManyToOne
     @JoinColumn(name = "categoria_id")

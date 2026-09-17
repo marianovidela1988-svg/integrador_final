@@ -3,8 +3,8 @@ package com.marianovidela.integrador_final.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,13 +26,14 @@ public class Pedido {
     @JoinColumn(name = "pedido_id")
     private List<ItemPedido> items = new ArrayList<>();
 
-    private Double total;
+    @Column(precision = 10, scale = 2)
+    private BigDecimal total;
     private String estado;
-    private String fechaHora;
+    private LocalDateTime fechaHora;
 
     @PrePersist
     public void prePersist() {
-        fechaHora = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
+        fechaHora = LocalDateTime.now();
         /*
          Si el estado no fue asignado "CANCELADO" por falta de stock,
          entonces se lo asigna como "PENDIENTE".
