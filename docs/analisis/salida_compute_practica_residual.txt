@@ -1,0 +1,17 @@
+
+Pretest (escenarios 1-13, 'Simple 1 producto'):
+  TPP por escenario: [31, 35, 27, 29, 36, 36, 32, 26, 44, 27, 31, 32, 25]
+  Media escenarios 1-6:  32.33 s (n=6)
+  Media escenarios 8-13: 30.83 s (n=6)
+  Diferencia (1-6 menos 8-13): 1.50 s
+  Correlacion posicion vs TPP: Pearson r=-0.1430 (p=0.6411); Spearman rho=-0.2182 (p=0.4738)
+
+Postest (escenarios 1-13, 'Simple 1 producto'):
+  TPP por escenario: [25, 24, 23, 21, 21, 19, 22, 32, 23, 21, 17, 19, 18]
+  Media escenarios 1-6:  22.17 s (n=6)
+  Media escenarios 8-13: 21.67 s (n=6)
+  Diferencia (1-6 menos 8-13): 0.50 s
+  Correlacion posicion vs TPP: Pearson r=-0.4124 (p=0.1614); Spearman rho=-0.6371 (p=0.0192)
+
+Reduccion global de medias (pretest - postest, n=20 c/u): 13.70 s
+(para contexto: la diferencia entre mitades dentro de cada corrida es muy inferior a esta reduccion global entre condiciones)

@@ -1,0 +1,39 @@
+flowchart TB
+    subgraph Cliente
+        direction LR
+        C0(["Envía mensaje\no pulsa botón"]) --> C1["Selecciona categoría,\nproducto y cantidad"] --> C2["Confirma\nel pedido"] --> C3(["Recibe confirmación o\naviso de stock insuficiente"]) --> C4(["Recibe notificación de\ncambio de estado"])
+    end
+
+    subgraph N8N["Bot de Telegram (n8n)"]
+        direction LR
+        N1["Arma menús y agrega\nítems al carrito"] --> N2["Envía confirmar\npedido"] --> N3{"¿estado =\nCANCELADO?"}
+        N3 -- "Sí" --> N4["Notifica falta\nde stock"]
+        N3 -- "No" --> N5["Envía confirmación\nal cliente"]
+        N6["Reenvía notificación\nal cliente"]
+    end
+
+    subgraph API["Backend (API REST)"]
+        direction LR
+        B1["GET /categorias\nPOST /carrito/item"] --> B2["Valida stock al\nconfirmar pedido"] --> B3{"¿Stock\nsuficiente?"}
+        B3 -- "Sí" --> B4["Crea pedido\nPENDIENTE"]
+        B3 -- "No" --> B5["Crea pedido\nCANCELADO"]
+        B4 --> B6["Responde 200\ncon estado en el body"]
+        B5 --> B6
+        B7["Notifica webhook\na n8n"]
+    end
+
+    subgraph Operador
+        direction LR
+        O1["Confirma o cancela\nel pedido en el panel"]
+    end
+
+    C1 -.-> N1
+    C2 -.-> N2
+    N1 -.-> B1
+    N2 -.-> B2
+    B6 -.-> N3
+    N4 -.-> C3
+    N5 -.-> C3
+    O1 -.-> B7
+    B7 -.-> N6
+    N6 -.-> C4
