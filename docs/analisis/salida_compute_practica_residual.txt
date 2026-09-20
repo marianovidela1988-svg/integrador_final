@@ -15,3 +15,19 @@ Postest (escenarios 1-13, 'Simple 1 producto'):
 
 Reduccion global de medias (pretest - postest, n=20 c/u): 13.70 s
 (para contexto: la diferencia entre mitades dentro de cada corrida es muy inferior a esta reduccion global entre condiciones)
+
+--- Sensibilidad: excluyendo el escenario 8 (ver docstring) ---
+
+Pretest, excluido el escenario 8 (12 escenarios):
+  Media escenarios 1-6:  32.33 s (n=6)
+  Media escenarios 8-13 sin el 8: 31.80 s (n=5)
+  Diferencia (primera menos segunda mitad): 0.53 s
+  Correlacion posicion vs TPP: Pearson r=-0.1252 (p=0.6983); Spearman rho=-0.1690 (p=0.5995)
+
+Postest, excluido el escenario 8 (12 escenarios):
+  Media escenarios 1-6:  22.17 s (n=6)
+  Media escenarios 8-13 sin el 8: 19.60 s (n=5)
+  Diferencia (primera menos segunda mitad): 2.57 s
+  Correlacion posicion vs TPP: Pearson r=-0.7718 (p=0.0033); Spearman rho=-0.7845 (p=0.0025)
+
+(Estos resultados acotan el aprendizaje intra-corrida; no estiman el arrastre entre condiciones, seccion 3.9.)
