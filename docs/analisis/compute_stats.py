@@ -16,6 +16,12 @@ Version 2 (re-ejecucion del experimento, ver Fase 1/2 de la ruta de correccion):
 - Se informa la reduccion porcentual sobre MEDIAS y sobre MEDIANAS; la
   mediana es el estimador que corresponde al contraste no parametrico y al
   intervalo de confianza bootstrap (hallazgo C11).
+- Version 3: se agrega al final la ESTIMACION POR INTERVALO de la reduccion
+  relativa (bootstrap percentil pareado sobre los escenarios), en sus dos
+  formulaciones, que son cifras distintas: (a) mediana de las diferencias
+  pareadas sobre la mediana del pretest (35,9%) y (b) reduccion de las
+  medianas de cada condicion (32,8%). Permite verificar si el umbral del 50%
+  de H1 queda fuera del intervalo, y no solo de la cifra puntual.
 
 Requiere: numpy, scipy, openpyxl (pip install numpy scipy openpyxl)
 Uso: python compute_stats.py
@@ -122,6 +128,30 @@ def main():
     print(f"  (Esta es la MEDIANA DE LAS DIFERENCIAS, la cifra que debe acompanar al "
           f"{100*mediana_de_diffs/np.median(pre):.1f}% de reduccion informado como principal, "
           f"NO la resta de las medianas por separado.)")
+
+    # --- Reduccion relativa: estimacion por intervalo (bootstrap percentil pareado) ---
+    # Se remuestrean escenarios (pares pre/post juntos) con reposicion y, en cada
+    # remuestreo, se recalculan las medianas. Semilla y numero de remuestreos
+    # son los mismos que en el bootstrap anterior.
+    rng = np.random.default_rng(BOOTSTRAP_SEED)
+    idx = rng.integers(0, n, size=(BOOTSTRAP_RESAMPLES, n))
+    pre_b, post_b = pre[idx], post[idx]
+    med_pre_b = np.median(pre_b, axis=1)
+    med_post_b = np.median(post_b, axis=1)
+    red_de_difs = np.median(pre_b - post_b, axis=1) / med_pre_b   # (a)
+    red_de_medianas = (med_pre_b - med_post_b) / med_pre_b        # (b)
+
+    print(f"\nReduccion relativa, bootstrap percentil pareado "
+          f"({BOOTSTRAP_RESAMPLES} remuestreos, semilla={BOOTSTRAP_SEED}):")
+    for etiqueta, punto, sim in (
+        ("(a) mediana de las diferencias / mediana del pretest",
+         mediana_de_diffs / np.median(pre), red_de_difs),
+        ("(b) reduccion de las medianas (pretest - postest) / mediana del pretest",
+         (np.median(pre) - np.median(post)) / np.median(pre), red_de_medianas),
+    ):
+        lo, hi = np.percentile(sim, [2.5, 97.5])
+        print(f"  {etiqueta}: {100*punto:.1f}%  IC95% = [{100*lo:.1f}%; {100*hi:.1f}%]  "
+              f"-> {'excluye' if hi < 0.5 else 'INCLUYE'} el umbral del 50% de H1")
 
 
 if __name__ == "__main__":

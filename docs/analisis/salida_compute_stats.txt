@@ -20,3 +20,7 @@ Bootstrap percentil (10000 remuestreos, semilla=42) para la mediana de las difer
   Mediana observada = 11.50 s
   IC95% = [8.00; 16.00] s
   (Esta es la MEDIANA DE LAS DIFERENCIAS, la cifra que debe acompanar al 35.9% de reduccion informado como principal, NO la resta de las medianas por separado.)
+
+Reduccion relativa, bootstrap percentil pareado (10000 remuestreos, semilla=42):
+  (a) mediana de las diferencias / mediana del pretest: 35.9%  IC95% = [25.8%; 44.4%]  -> excluye el umbral del 50% de H1
+  (b) reduccion de las medianas (pretest - postest) / mediana del pretest: 32.8%  IC95% = [24.1%; 40.8%]  -> excluye el umbral del 50% de H1
