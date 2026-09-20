@@ -9,7 +9,7 @@ classDiagram
         -Long id
         -String nombre
         -String descripcion
-        -Double precio
+        -BigDecimal precio
         -Integer stock
         -Categoria categoria
     }
@@ -19,9 +19,9 @@ classDiagram
         -String clienteNombre
         -String chatId
         -List~ItemPedido~ items
-        -Double total
+        -BigDecimal total
         -String estado
-        -String fechaHora
+        -LocalDateTime fechaHora
         +prePersist()
     }
 
@@ -30,8 +30,8 @@ classDiagram
         -Long productoId
         -String nombre
         -Integer cantidad
-        -Double precio
-        -Double subtotal
+        -BigDecimal precio
+        -BigDecimal subtotal
     }
 
     class Usuario {
@@ -41,7 +41,7 @@ classDiagram
         -String email
         -String dni
         -String direccion
-        -long telefono
+        -String telefono
     }
 
     class Administrador {

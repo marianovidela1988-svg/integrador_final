@@ -18,7 +18,7 @@ erDiagram
         bigint id PK
         varchar nombre
         varchar descripcion
-        double precio
+        decimal(10,2) precio
         int stock
         bigint categoria_id FK
     }
@@ -26,17 +26,17 @@ erDiagram
         bigint id PK
         varchar cliente_nombre
         varchar chat_id
-        double total
+        decimal(10,2) total
         varchar estado
-        varchar fecha_hora
+        datetime fecha_hora
     }
     ITEMS_PEDIDO {
         bigint id PK
         bigint producto_id "sin FK declarada"
         varchar nombre "snapshot al momento de compra"
         int cantidad
-        double precio "snapshot al momento de compra"
-        double subtotal
+        decimal(10,2) precio "snapshot al momento de compra"
+        decimal(10,2) subtotal
         bigint pedido_id FK
     }
     USUARIOS {
@@ -46,5 +46,5 @@ erDiagram
         varchar email
         varchar dni
         varchar direccion
-        bigint telefono
+        varchar telefono
     }

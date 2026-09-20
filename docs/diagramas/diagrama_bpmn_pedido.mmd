@@ -19,12 +19,16 @@ flowchart TB
         B3 -- "No" --> B5["Crea pedido\nCANCELADO"]
         B4 --> B6["Responde 200\ncon estado en el body"]
         B5 --> B6
+        B8["Confirma: transición atómica a\nCONFIRMADO (solo si aún no lo estaba)"] --> B9["Descuenta el stock\nde cada ítem del pedido"]
+        B10["Cancela: pasa a CANCELADO\n(no modifica el stock)"]
+        B9 --> B7
+        B10 --> B7
         B7["Notifica webhook\na n8n"]
     end
 
     subgraph Operador
         direction LR
-        O1["Confirma o cancela\nel pedido en el panel"]
+        O1["Revisa el pedido\nPENDIENTE en el panel"] --> O2{"¿Confirma o\ncancela?"}
     end
 
     C1 -.-> N1
@@ -34,6 +38,7 @@ flowchart TB
     B6 -.-> N3
     N4 -.-> C3
     N5 -.-> C3
-    O1 -.-> B7
+    O2 -. "Confirma" .-> B8
+    O2 -. "Cancela" .-> B10
     B7 -.-> N6
     N6 -.-> C4
