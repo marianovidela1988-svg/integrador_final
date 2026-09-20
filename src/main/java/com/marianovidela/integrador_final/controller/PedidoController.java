@@ -17,7 +17,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/pedidos")
-@CrossOrigin(origins = "*")
 public class PedidoController {
 
     @Autowired

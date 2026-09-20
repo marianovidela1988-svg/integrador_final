@@ -19,5 +19,6 @@ public class Usuario {
     private String email;
     private String dni;
     private String direccion;
+    @Column(length = 20, nullable = false)
     private String telefono;
 }
