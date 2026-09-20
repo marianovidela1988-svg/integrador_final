@@ -1,4 +1,5 @@
--- Esquema de la base de datos (MySQL 8.0), generado a partir de las seis entidades
+-- Esquema de la base de datos (compatible con MySQL y MariaDB; el experimento se
+-- ejecuto en MariaDB 10.4.28), generado a partir de las seis entidades
 -- JPA descriptas en la seccion 4.3 del informe (productos, categorias, pedidos,
 -- items_pedido, usuarios, administradores). Corresponde a lo que Hibernate genera
 -- automaticamente (spring.jpa.hibernate.ddl-auto=update) a partir de las clases
