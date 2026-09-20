@@ -24,3 +24,11 @@ Bootstrap percentil (10000 remuestreos, semilla=42) para la mediana de las difer
 Reduccion relativa, bootstrap percentil pareado (10000 remuestreos, semilla=42):
   (a) mediana de las diferencias / mediana del pretest: 35.9%  IC95% = [25.8%; 44.4%]  -> excluye el umbral del 50% de H1
   (b) reduccion de las medianas (pretest - postest) / mediana del pretest: 32.8%  IC95% = [24.1%; 40.8%]  -> excluye el umbral del 50% de H1
+
+--- Sensibilidad: escenario 14 del postest (intento abortado y resimulacion) ---
+Ventana registrada del escenario 14: 21:16:55 a 21:17:53 (58 s), solo la resimulacion.
+Log de n8n entre los escenarios 13 y 14: 15 ejecuciones, 21:15:29 a 21:16:43 (intento abortado, fuera del intervalo registrado).
+  registrado (solo resimulacion): TPP14 = 58 s | media postest = 25.60 s (reduccion de medias 34.9%) | mediana de difs = 11.50 s (35.9% de la mediana pretest, IC95% [25.8%; 44.4%]) | favorecen al pretest: 1 | Wilcoxon exacto p = 9.54e-06
+  con el intento abortado, desde su 1a ejecucion en n8n: TPP14 = 144 s | media postest = 29.90 s (reduccion de medias 23.9%) | mediana de difs = 10.50 s (32.8% de la mediana pretest, IC95% [23.3%; 42.2%]) | favorecen al pretest: 2 | Wilcoxon exacto p = 1.21e-03
+  cota superior: desde el fin del escenario 13: TPP14 = 156 s | media postest = 30.50 s (reduccion de medias 22.4%) | mediana de difs = 10.50 s (32.8% de la mediana pretest, IC95% [23.3%; 42.2%]) | favorecen al pretest: 2 | Wilcoxon exacto p = 1.21e-03
+El instante exacto de inicio del intento abortado solo puede leerse del video. Como el operador actua antes de que n8n registre su 1a ejecucion, el valor real esta entre la variante 'desde la 1a ejecucion' (piso) y la cota superior.

@@ -22,6 +22,13 @@ Version 2 (re-ejecucion del experimento, ver Fase 1/2 de la ruta de correccion):
   pareadas sobre la mediana del pretest (35,9%) y (b) reduccion de las
   medianas de cada condicion (32,8%). Permite verificar si el umbral del 50%
   de H1 queda fuera del intervalo, y no solo de la cifra puntual.
+- Version 4: se agrega un ANALISIS DE SENSIBILIDAD del escenario 14 del postest.
+  Ese escenario se aborto (error al cargar la cantidad) y se volvio a simular; el
+  intervalo registrado en el Anexo A (58 s) cubre solo la resimulacion. Las
+  ejecuciones del intento abortado figuran en el log de n8n (cruzar_log_n8n.py),
+  fuera del intervalo. Se recalcula el contraste con el intento abortado incluido
+  para acotar cuanto depende el resultado de esa decision. No reemplaza al
+  resultado principal, que usa los datos tal como se registraron.
 
 Requiere: numpy, scipy, openpyxl (pip install numpy scipy openpyxl)
 Uso: python compute_stats.py
@@ -31,6 +38,8 @@ import numpy as np
 from scipy import stats
 from scipy.stats import norm
 import openpyxl
+
+import cruzar_log_n8n as n8n
 
 XLSX_PATH = "../Plantilla_Experimento_Pretest_Postest.xlsx"
 BOOTSTRAP_SEED = 42
@@ -152,6 +161,47 @@ def main():
         lo, hi = np.percentile(sim, [2.5, 97.5])
         print(f"  {etiqueta}: {100*punto:.1f}%  IC95% = [{100*lo:.1f}%; {100*hi:.1f}%]  "
               f"-> {'excluye' if hi < 0.5 else 'INCLUYE'} el umbral del 50% de H1")
+
+    # --- Sensibilidad: escenario 14 del postest con el intento abortado incluido ---
+    fecha, ventanas = n8n.leer_ventanas(wb)
+    assert ventanas[12][0] == 13 and ventanas[13][0] == 14
+    hueco = n8n.huecos(n8n.ejecuciones_del_postest(n8n.leer_ejecuciones(), fecha, ventanas),
+                       ventanas).get((13, 14), [])
+    print("\n--- Sensibilidad: escenario 14 del postest (intento abortado y resimulacion) ---")
+    print(f"Ventana registrada del escenario 14: {n8n.hora(ventanas[13][1])} a "
+          f"{n8n.hora(ventanas[13][2])} ({int(post[13])} s), solo la resimulacion.")
+    if hueco:
+        inicio_abortado = min(t for t, _ in hueco)
+        fin13, fin14 = ventanas[12][2], ventanas[13][2]
+        print(f"Log de n8n entre los escenarios 13 y 14: {len(hueco)} ejecuciones, "
+              f"{n8n.hora(inicio_abortado)} a {n8n.hora(max(t for t, _ in hueco))} "
+              f"(intento abortado, fuera del intervalo registrado).")
+        variantes = (
+            ("registrado (solo resimulacion)", int(post[13])),
+            ("con el intento abortado, desde su 1a ejecucion en n8n",
+             int((fin14 - inicio_abortado).total_seconds())),
+            ("cota superior: desde el fin del escenario 13",
+             int((fin14 - fin13).total_seconds())),
+        )
+        for etiqueta, tpp14 in variantes:
+            post_v = post.copy()
+            post_v[13] = tpp14
+            d_v = pre - post_v
+            w_v = stats.wilcoxon(pre, post_v, alternative="two-sided", mode="exact")
+            rng_v = np.random.default_rng(BOOTSTRAP_SEED)
+            idx_v = rng_v.integers(0, n, size=(BOOTSTRAP_RESAMPLES, n))
+            red_v = np.median((pre - post_v)[idx_v], axis=1) / np.median(pre[idx_v], axis=1)
+            lo_v, hi_v = np.percentile(red_v, [2.5, 97.5])
+            print(f"  {etiqueta}: TPP14 = {tpp14} s | media postest = {post_v.mean():.2f} s "
+                  f"(reduccion de medias {100*(pre.mean()-post_v.mean())/pre.mean():.1f}%) | "
+                  f"mediana de difs = {np.median(d_v):.2f} s ({100*np.median(d_v)/np.median(pre):.1f}% de la "
+                  f"mediana pretest, IC95% [{100*lo_v:.1f}%; {100*hi_v:.1f}%]) | "
+                  f"favorecen al pretest: {int((d_v < 0).sum())} | Wilcoxon exacto p = {w_v.pvalue:.2e}")
+        print("El instante exacto de inicio del intento abortado solo puede leerse del video. "
+              "Como el operador actua antes de que n8n registre su 1a ejecucion, el valor real "
+              "esta entre la variante 'desde la 1a ejecucion' (piso) y la cota superior.")
+    else:
+        print("El log no registra ejecuciones entre los escenarios 13 y 14.")
 
 
 if __name__ == "__main__":
