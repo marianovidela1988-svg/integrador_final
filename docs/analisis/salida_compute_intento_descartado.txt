@@ -1,0 +1,10 @@
+Pretest (10/09): media = 39.30 s, mediana = 32.00 s
+Postest descartado (11/09): media = 31.20 s, mediana = 26.00 s
+Postest definitivo (12/09): media = 25.60 s, mediana = 21.50 s
+
+--- Cada postest contra el pretest (pareado por escenario) ---
+Descartado (11/09): reduccion de medias = 20.6%, mediana de diferencias = 5.00 s, favorecen al pretest = 3, Wilcoxon exacto p = 8.32e-04
+Definitivo (12/09): reduccion de medias = 34.9%, mediana de diferencias = 11.50 s, favorecen al pretest = 1, Wilcoxon exacto p = 9.54e-06
+
+--- Definitivo contra descartado (mismo circuito, mismos escenarios) ---
+Diferencia de medias = 5.60 s (41% de la reduccion global de 13.70 s), Wilcoxon pareado exacto p = 5.32e-04

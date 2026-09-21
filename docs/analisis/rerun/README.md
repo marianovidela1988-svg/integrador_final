@@ -26,7 +26,7 @@ volcados de stock de esa corrida (informe, sección 6.2).
 | `ledger_pretest_COMPLETADO.xlsx` | Registro manual del pretest: pedidos, precios, totales y stock | Pretest |
 | `stock_ANTES_pretest.csv`, `stock_DESPUES_pretest.csv` | Volcados de stock antes y después del pretest | Pretest |
 | `n8n_executions_postest.csv` | Log de ejecuciones de n8n (ver la sección siguiente) | Tres tandas |
-| `intento1_postest_bug_confirmacion_doble/` | Volcados de stock, pedidos, log de n8n y planilla del intento fallido | Intento fallido |
+| `intento1_postest_bug_confirmacion_doble/` | Volcados de stock, pedidos, log de n8n y planilla del intento fallido. Sus tiempos se comparan con los del postest definitivo en `../compute_intento_descartado.py` (salida: `../salida_compute_intento_descartado.txt`) | Intento fallido |
 | `Anexo_A_plantilla.xlsx` | Copia idéntica de `docs/Plantilla_Experimento_Pretest_Postest.xlsx` (Anexo A) | Pretest y postest |
 | `video_pretest.mov`, `video_postest.mov` | Grabaciones de pantalla con el reloj visible: instrumento de medición de TPP | Pretest y postest |
 
