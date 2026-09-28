@@ -75,7 +75,8 @@ class PedidoFlowTest extends AdminAuthenticatedTestBase {
                         .content("{}"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.estado").value("PENDIENTE"))
-                .andExpect(jsonPath("$.total").value(100.0));
+                .andExpect(jsonPath("$.total").value(100.0))
+                .andExpect(jsonPath("$.mensaje").value("Pedido confirmado exitosamente"));
     }
 
     @Test
@@ -89,7 +90,8 @@ class PedidoFlowTest extends AdminAuthenticatedTestBase {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{}"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.estado").value("CANCELADO"));
+                .andExpect(jsonPath("$.estado").value("CANCELADO"))
+                .andExpect(jsonPath("$.mensaje").value("No hay stock suficiente para uno de los productos del pedido."));
     }
 
     @Test

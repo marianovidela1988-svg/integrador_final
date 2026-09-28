@@ -48,11 +48,17 @@ public class CarritoController {
         String clienteNombre = body.getOrDefault("clienteNombre", "Cliente Telegram");
         Pedido pedido = carritoService.confirmarPedido(chatId, clienteNombre);
 
+        // El pedido rechazado por falta de stock se responde igual con 200 (n8n
+        // decide por el campo estado), pero el mensaje no debe decir que se confirmó.
+        String mensaje = "CANCELADO".equals(pedido.getEstado())
+                ? "No hay stock suficiente para uno de los productos del pedido."
+                : "Pedido confirmado exitosamente";
+
         return ResponseEntity.ok(Map.of(
                 "id", pedido.getId(),
                 "total", pedido.getTotal(),
                 "estado", pedido.getEstado(),
-                "mensaje", "Pedido confirmado exitosamente"
+                "mensaje", mensaje
         ));
 
     }
